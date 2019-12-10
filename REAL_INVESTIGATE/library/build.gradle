@@ -1,0 +1,26 @@
+apply plugin: 'com.android.library'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+   implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "28.0.3"
+    lintOptions {
+        abortOnError false
+    }
+    defaultConfig {
+        minSdkVersion 26
+    }
+}
+
+apply from: '../maven_push.gradle'

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name" translatable="false">실태조사</string>
+
+    <!-- config Pnael -->
+    <string name="action_hide">Hide Panel</string>
+    <string name="action_show">Show Panel</string>
+    <string name="action_anchor_enable">Enable Anchor Point</string>
+    <string name="action_anchor_disable">Disable Anchor Point</string>
+
+	<!-- login Panel -->
+	<string name="appid">아이디</string>
+    <string name="password">비밀번호</string>
+    <string name="loginSave">아이디 저장</string>
+    <string name="action_sign_in">로그인</string>
+    <string name="action_exit">종료</string>
+
+    <!-- panel name -->
+    <string name="mapS" translatable="false">지도</string>
+    <string name="contentS" translatable="false">내용</string>
+    <string name="homeS" translatable="false">설정</string>
+
+    <!-- contents Panel -->
+    <string name="content" translatable="false">지번 정보</string>
+    <string name="address" translatable="false">지번주소</string>
+    <string name="pnu" translatable="false">PNU</string>
+    <string name="capture_onOff">촬영 여부</string>
+    <string name="capture_off">촬영 대상지</string>
+    <string name="capture_on">촬영 완료지</string>
+    <string name="send_onOff">전송 여부</string>
+    <string name="send_off">전송 미완료</string>
+    <string name="send_on">전송 완료</string>
+    <string name="dron_onOff">드론촬영 여부</string>
+    <string name="dron_off">촬영 대상지</string>
+    <string name="dron_on">촬영 완료지</string>
+
+    <!-- config Panel -->
+    <string name="configName">설정</string>
+
+    <!-- camera -->
+    <string name="picture">사진</string>
+    <string name="farview">원경</string>
+    <string name="nearview">근경</string>
+    <string name="flon">Flash ON</string>
+    <string name="floff">Flash OFF</string>
+    <string name="flauto">Flash AUTO</string>
+    <string name="listSave">리스트 저장</string>
+    <string name="listNoSave">리스트 미저장</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">카메라 권한을 받지 못하여 사용할 수 없습니다..</string>
+    <string name="camera_error">이 기기는 새로운 카메라 기능을 제공하지 않습니다.</string>
+    <string name="intro_message">사진 촬영 시 자동으로 리스트에 저장됩니다.</string>
+
+</resources>

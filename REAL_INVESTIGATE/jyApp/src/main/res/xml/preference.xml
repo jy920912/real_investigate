@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="지도설정">
+        <ListPreference
+            android:key="selectMap"
+            android:title="지도 선택"
+            android:defaultValue="PHOTO"
+            android:entries="@array/action_list"
+            android:entryValues="@array/action_values"
+            android:icon="@drawable/map_icon"
+            android:dialogIcon="@drawable/map_icon_b"
+            android:dialogTitle="출력할 지도를 선택하세요."
+            android:summary="출력할 지도형태를 설정합니다."
+             />
+
+        <SwitchPreference
+            android:key="jijukOnOff"
+            android:title="지적도 출력"
+            android:defaultValue="true"
+            android:icon="@drawable/jijuk_icon"
+            android:dialogIcon="@drawable/jijuk_icon_b"
+            android:summary="지적도 출력을 설정합니다." />
+        <SwitchPreference
+            android:key="jibunOnOff"
+            android:title="지번 출력"
+            android:icon="@drawable/jibun_icon"
+            android:dialogIcon="@drawable/jibun_icon_b"
+            android:summary="지번 출력을 설정합니다." />
+
+        <ListPreference
+            android:key="selectGPSFix"
+            android:title="내 위치 고정"
+            android:defaultValue="NONFIX"
+
+            android:entries="@array/gps_list"
+            android:entryValues="@array/gps_values"
+            android:icon="@drawable/gps_fix_org"
+            android:dialogIcon="@drawable/gps_fix"
+            android:dialogTitle="위치 고정 여부를 선택하세요."
+            android:summary="로그인 시 최초 내 위치 고정 여부를 설정합니다"
+            />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

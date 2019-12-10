@@ -1,0 +1,39 @@
+<resources>
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/orangeColor</item>
+        <item name="colorPrimaryDark">@color/darkorangeColor</item>
+        <item name="colorAccent">@color/darkorangeColor</item>
+        <item name="colorControlNormal">@color/darkorangeColor</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+
+    </style>
+
+    <style name="ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:displayOptions">homeAsUp</item>
+    </style>
+
+    <style name ="mytoast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">@color/orangeColor</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">2dp</item>
+        <item name="stStrokeColor">@color/darkorangeColor</item>
+        <item name="stLength">LONG</item>
+        <item name="stGravity">top</item>
+        <item name="stRadius">5dp</item>
+    </style>
+
+    <style name ="gpsFixToast" parent="mytoast">
+        <item name="stIconStart">@drawable/gps_fix</item>
+    </style>
+
+    <style name ="gpsNonfixToast" parent="mytoast">
+        <item name="stIconStart">@drawable/gps_nonfix</item>
+    </style>
+</resources>

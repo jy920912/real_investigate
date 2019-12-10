@@ -1,0 +1,13 @@
+<resources>
+	<color name="orangeColor">#ffff9431</color>
+	<color name="darkorangeColor">#ffD56600</color>
+    <color name="colorPrimary">#aaaaaa</color>
+    <color name="colorPrimaryDark">#777777</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="control_background">#777777</color>
+    <color name="sub_background">#aaaaaa</color>
+    <color name="capture_off_color">#ff7777</color>
+    <color name="capture_on_color">#7777ff</color>
+    <color name="wwwwhite">#ffffff</color>
+    <color name="bbbblack">#000000</color>
+</resources>
