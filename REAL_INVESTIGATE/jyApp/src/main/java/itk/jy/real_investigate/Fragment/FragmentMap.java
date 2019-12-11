@@ -1,20 +1,10 @@
 package itk.jy.real_investigate.Fragment;
 
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.hardware.display.DisplayManager;
 import android.location.Location;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,14 +22,10 @@ import androidx.fragment.app.Fragment;
 
 import com.muddzdev.styleabletoast.StyleableToast;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-
 import itk.jy.real_investigate.MainActivity;
+import itk.jy.real_investigate.MapService.screenShotContentDialogFragment;
 import itk.jy.real_investigate.Preference.PreferenceManager;
 import itk.jy.real_investigate.R;
-import itk.jy.real_investigate.library.SlidingUpPanelLayout;
 
 import static itk.jy.real_investigate.Preference.ConfigPreference.*;
 
@@ -161,49 +147,7 @@ public class FragmentMap extends Fragment {
     //webView 현재 화면 캡쳐
     public void webViewCapture(String FileName) {
         final String fName = FileName;
-        /*View v1 = getActivity().getWindow().getDecorView().getRootView();
-        v1.setDrawingCacheEnabled(true);
-        v1.buildDrawingCache(true);
-        Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-        v1.setDrawingCacheEnabled(false);*/
-
-
-        mWebView.measure(View.MeasureSpec.makeMeasureSpec(
-                View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        mWebView.layout(0, 0, mWebView.getMeasuredWidth(), mWebView.getMeasuredHeight());
-        mWebView.setDrawingCacheEnabled(true);
-        mWebView.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(mWebView.getMeasuredWidth(),
-                mWebView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(bitmap);
-        Paint paint = new Paint();
-        int iHeight = bitmap.getHeight();
-        canvas.drawBitmap(bitmap, 0, iHeight, paint);
-        mWebView.draw(canvas);
-
-        FileOutputStream fos = null;
-        File pictureStorage = new File( Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), "MyCameraView/");
-        // 만약 장소가 존재하지 않는다면 폴더를 새롭게 만든다.
-        if (!pictureStorage.exists()) {
-            pictureStorage.mkdirs();
-        }
-
-        String strFilePath = pictureStorage + "/" + fName + ".png";
-        File fileCacheItem = new File(strFilePath);
-
-        try {
-            fos = new FileOutputStream(fileCacheItem);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        mediaScanIntent.setData(Uri.fromFile(fileCacheItem));
-        getActivity().sendBroadcast(mediaScanIntent);
+        ((MainActivity)getActivity()).startProjection(fName);
 
     }
 
@@ -216,7 +160,6 @@ public class FragmentMap extends Fragment {
             final String cpnfT = cpnf;
             final String sdnfT = sdnf;
             final String drnfT = drnf;
-            webViewCapture(address);
             ((MainActivity)getActivity()).onOff[0] = cpnf;
             ((MainActivity)getActivity()).onOff[1] = sdnf;
             ((MainActivity)getActivity()).onOff[2] = drnf;
@@ -251,9 +194,8 @@ public class FragmentMap extends Fragment {
                     }
                 }
             });
-            //slideUp
-            SlidingUpPanelLayout mLayout = getActivity().findViewById(R.id.sliding_layout);
-            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+            screenShotContentDialogFragment frfr = screenShotContentDialogFragment.getInstance(addressText);
+            frfr.show(getFragmentManager(),frfr.DIALOGNAME);
         }
         @JavascriptInterface
         public void android_sendNoAddress(String address) {

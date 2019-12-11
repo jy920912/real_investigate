@@ -33,6 +33,7 @@
     <string name="dron_onOff">드론촬영 여부</string>
     <string name="dron_off">촬영 대상지</string>
     <string name="dron_on">촬영 완료지</string>
+    <string name="dialog">행동을 선택하세요.</string>
 
     <!-- config Panel -->
     <string name="configName">설정</string>

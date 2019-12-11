@@ -502,7 +502,10 @@ public class Camera2BasicFragment extends Fragment
         File pictureStorage = new File( Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), "MyCameraView/");
         // 만약 장소가 존재하지 않는다면 폴더를 새롭게 만든다.
         if (!pictureStorage.exists()) {
-            pictureStorage.mkdirs();
+            boolean dirCreate = pictureStorage.mkdirs();
+            if(!dirCreate) {
+                Toast.makeText(getContext(),"오류 - 폴더 생성 실패", Toast.LENGTH_SHORT).show();
+            }
         }
     }
     /*
