@@ -31,9 +31,8 @@ import itk.jy.real_investigate.Permission.PermissionRequester;
 /* ** 화면을 풀 스크린으로 변경?*/
 public class CameraActivity extends AppCompatActivity {
     private static String addressString;
-    private int zzic;
-    private String AorB;
-    private boolean listIsSave = true;
+    private static int near_zzic;
+    private static int far_zzic;
     private Intent addressIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,6 @@ public class CameraActivity extends AppCompatActivity {
         //FragmentContent에서 보낸 주소 데이터 받기
         addressIntent = getIntent();
         addressString = addressIntent.getStringExtra("pnuName");
-        AorB = "A";
 
         //camera surface view 등록
         if (null == savedInstanceState) {
@@ -63,30 +61,36 @@ public class CameraActivity extends AppCompatActivity {
 
                     }
                 });
+
         // 사용자가 권한을 수락한 경우
         if (result == PermissionRequester.ALREADY_GRANTED || result == PermissionRequester.REQUEST_PERMISSION) {
 
         } else {
 
         }
+
     }
     @Override
     public void onBackPressed() {
         getIntent().removeExtra("pnuName");
         //찍은 사진 목록을 FragmentContent로 전송
         setResult(1213,addressIntent);
-        zzic = 0;
+        near_zzic = 0; far_zzic = 0;
 
         super.onBackPressed();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
-    public void zzicCount() { ++zzic; }
-    public int getzzic() { return zzic; }
+    public void zzicCount(int zzicWhat) {
+        if(zzicWhat == 0) { ++near_zzic; }
+        else if(zzicWhat == 1) { ++far_zzic; }
+    }
+    public int getzzic(int zzicWhat) {
+        int zzic = 0;
+        if (zzicWhat == 0) {zzic = near_zzic; }
+        else if (zzicWhat == 1) { zzic = far_zzic; }
+        return zzic;
+    }
     public String getAddressString() { return addressString; }
     public void putFileName(String Count, String Name) { addressIntent.putExtra(Count,Name); }
-    public String getAorB() { return AorB; }
-    public void setAorB(String ab) { AorB = ab; }
-    public boolean getListSave() { return listIsSave; }
-    public void setListIsSave(boolean tf) { listIsSave = tf; }
 }

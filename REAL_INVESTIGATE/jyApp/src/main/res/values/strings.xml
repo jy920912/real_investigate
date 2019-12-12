@@ -33,8 +33,18 @@
     <string name="dron_onOff">드론촬영 여부</string>
     <string name="dron_off">촬영 대상지</string>
     <string name="dron_on">촬영 완료지</string>
-    <string name="dialog">행동을 선택하세요.</string>
+    <string name="contents_info">속성 상세보기</string>
+    <string name="picture_info">사진 정보</string>
+    <string name="send_pic">사진 전송</string>
 
+    <!-- spotDialog -->
+    <string name="spotdialogtitle">행동을 선택하세요.</string>
+    <string name="spotcheck">대상지 표시 제거</string>
+
+    <!-- ftpDialog -->
+    <string name="ftpdialogtitle">사진 전송 중...</string>
+    <string name="zeropercent">0%</string>
+    <string name="countsend">0/1</string>
     <!-- config Panel -->
     <string name="configName">설정</string>
 

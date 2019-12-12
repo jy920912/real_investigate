@@ -2,13 +2,16 @@ package itk.jy.real_investigate.MapService;
 
 import android.app.Dialog;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,7 +26,7 @@ import itk.jy.real_investigate.library.SlidingUpPanelLayout;
 public class screenShotContentDialogFragment extends DialogFragment {
 
     public static final String DIALOGNAME = "dialog_event";
-    private static final String[] ListMenu = {"스크린샷","정보보기"};
+    private static final String[] ListMenu = {"정보보기","스크린샷"};
     private static String addressT;
     public screenShotContentDialogFragment() {}
     public static screenShotContentDialogFragment getInstance(String address) {
@@ -40,7 +43,7 @@ public class screenShotContentDialogFragment extends DialogFragment {
 
         Dialog dialog = getDialog();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
+        final CheckBox spotTFBox = v.findViewById(R.id.spot_check);
         TextView TV = v.findViewById(R.id.jibun_text);
         TV.setText(addressT);
         ListView LV = v.findViewById(R.id.dialog_listview);
@@ -50,13 +53,16 @@ public class screenShotContentDialogFragment extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 dismiss();
-                if(position == 0) {
-                    ((MainActivity)getActivity()).startProjection(addressT);
-                }
-                else {
+                if(position == 0){
                     //slideUp
                     SlidingUpPanelLayout mLayout = getActivity().findViewById(R.id.sliding_layout);
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                }
+                else if(position == 1) {
+                    boolean tftf;
+                    if(spotTFBox.isChecked()) tftf = true;
+                    else tftf = false;
+                    ((MainActivity)getActivity()).startProjection(addressT, tftf);
                 }
 
 

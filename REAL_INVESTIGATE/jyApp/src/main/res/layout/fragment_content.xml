@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,8 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:text="@string/content"
         android:textAlignment="center"
         android:textSize="20sp" />
@@ -23,18 +20,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stretchColumns="1">
-
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
                 android:text="@string/address"
                 />
             <TextView
@@ -47,13 +42,13 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
                 android:text="@string/pnu"
                 />
             <TextView
@@ -66,7 +61,9 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,7 +74,7 @@
                 android:paddingRight="10dp"
                 android:text="@string/capture_onOff"
                 />
-            <Switch
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/capture_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,13 +83,15 @@
                 android:switchPadding="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:layout_gravity="left"/>
+                android:layout_gravity="start"/>
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -103,7 +102,7 @@
                 android:paddingRight="10dp"
                 android:text="@string/send_onOff"
                 />
-            <Switch
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/send_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -112,13 +111,15 @@
                 android:switchPadding="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:layout_gravity="left"/>
+                android:layout_gravity="start"/>
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,7 +130,8 @@
                 android:paddingRight="10dp"
                 android:text="@string/dron_onOff"
                 />
-            <Switch
+
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/dron_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -138,14 +140,17 @@
                 android:switchPadding="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:layout_gravity="left"/>
+                android:layout_gravity="start"/>
         </TableRow>
     </TableLayout>
     <Button
         android:id="@+id/Btn_moreProperty"
-        android:text="속성 더보기"
+        android:text="@string/contents_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_darkorg_button"
+        android:textSize="17sp"
+        android:textColor="@color/wwwwhite"/>
 
     <TextView
         android:id="@+id/Tv_picText"
@@ -153,41 +158,44 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:text="사진정보"
+        android:text="@string/picture_info"
         android:textAlignment="center"
         android:textSize="20sp" />
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:stretchColumns="*">
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#aaaaaa"
-            android:padding="10dp">
-
-            <ImageButton
-                android:id="@+id/take_picture"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/app_name"
-                android:padding="15dp"
-                android:background="@drawable/add_a_photo_black" />
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/take_picture"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/add_a_photo_black"
+                    android:background="@drawable/round_org_button"/>
 
-            <ImageButton
-                android:id="@+id/take_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/app_name"
-                android:padding="15dp"
-                android:background="@drawable/add_a_image_black" />
-
-        </TableRow>
-    </TableLayout>
+                <ImageButton
+                    android:id="@+id/take_image"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/app_name"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:src="@drawable/add_a_image_black"
+                    android:background="@drawable/round_org_button"/>
+            </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -200,7 +208,10 @@
         android:id="@+id/sendButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="사진 보내기"
+        android:text="@string/send_pic"
+        android:background="@drawable/round_darkorg_button"
+        android:textSize="17sp"
+        android:textColor="@color/wwwwhite"
         />
     <ListView
         android:id="@+id/image_listView"

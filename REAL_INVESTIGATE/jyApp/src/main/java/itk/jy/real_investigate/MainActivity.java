@@ -204,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 4532;
     private static String FILENAME;
+    private static boolean spotTF;
     File storeDirectory;
     private static final String SCREENCAP_NAME = "screencap";
     private static final int VIRTUAL_DISPLAY_FLAGS = DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY | DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC;
@@ -264,6 +265,10 @@ public class MainActivity extends AppCompatActivity {
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             mediaScanIntent.setData(Uri.fromFile(storeDirectory));
             sendBroadcast(mediaScanIntent);
+            if(spotTF) {
+                FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);
+                map.mWebView.loadUrl("javascript:android_receiveMSGPointVisible(true)");
+            }
             StyleableToast.makeText(getApplicationContext(),"스크린샷이 저장되었습니다.",Toast.LENGTH_LONG,R.style.mytoast).show();
         }
     }
@@ -278,8 +283,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void startProjection(String fileName) {
+    public void startProjection(String fileName, boolean tf) {
         FILENAME = fileName;
+        spotTF = tf;
+        if(spotTF) {
+            FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);
+            map.mWebView.loadUrl("javascript:android_receiveMSGPointVisible(false)");
+        }
         startActivityForResult(mProjectionManager.createScreenCaptureIntent(), REQUEST_CODE);
     }
 

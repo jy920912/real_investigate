@@ -67,12 +67,16 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.muddzdev.styleabletoast.StyleableToast;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -103,10 +107,20 @@ public class Camera2BasicFragment extends Fragment
     private static final String FRAGMENT_DIALOG = "dialog";
 
     //플래시 여부
-    private final int FLASH_NO = 0;
-    private final int FLASH_ALLWAYS = 1;
-    private final int FLASH_AUTO = 2;
+    private static final int FLASH_NO = 0;
+    private static final int FLASH_ALLWAYS = 1;
+    private static final int FLASH_AUTO = 2;
     private int FLASH_WHAT = FLASH_AUTO;
+
+    //원경 근경 여부
+    private static final int NEAR_VIEW = 0;
+    private static final int FAR_VIEW = 1;
+    private static int VIEW_WHAT= NEAR_VIEW;
+
+    //리스트 저장 여부
+    private static final int LIST_SAVE = 0;
+    private static final int LIST_UNSAVE = 1;
+    private static int LIST_WHAT = 0;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -265,12 +279,14 @@ public class Camera2BasicFragment extends Fragment
 
         @Override
         public void onImageAvailable(ImageReader reader) {
-            Activity activity = getActivity();
             //근경 원경 확인
-            String srcAB = ((CameraActivity)getActivity()).getAorB();
-            int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-            ((CameraActivity)getActivity()).zzicCount();
-            int pictureNum = ((CameraActivity)getActivity()).getzzic();
+            String srcAB;
+            if(VIEW_WHAT == 0) { srcAB = "A"; }
+            else { srcAB = "B"; }
+
+            int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
+            ((CameraActivity)getActivity()).zzicCount(VIEW_WHAT);
+            int pictureNum = ((CameraActivity)getActivity()).getzzic(VIEW_WHAT);
             String fileName = ((CameraActivity)getActivity()).getAddressString()+"_"+srcAB+"_"+pictureNum;
             String filePath = "MyCameraView/"+fileName+".jpg";
             mFile = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), filePath);
@@ -285,9 +301,9 @@ public class Camera2BasicFragment extends Fragment
             ContentResolver cr = getActivity().getContentResolver();
             cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
-            boolean listTF = ((CameraActivity)getActivity()).getListSave();
-            if(listTF) {
-                ((CameraActivity) getActivity()).putFileName("picture" + pictureNum, mFile.toString());
+
+            if(LIST_WHAT == LIST_SAVE) {
+                ((CameraActivity) getActivity()).putFileName("picture" + pictureNum+srcAB, mFile.toString());
             }
             mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
         }
@@ -427,8 +443,8 @@ public class Camera2BasicFragment extends Fragment
      * @param aspectRatio       The aspect ratio
      * @return The optimal {@code Size}, or an arbitrary one if none were big enough
      */
-    private static Size chooseOptimalSize(Size[] choices, int textureViewWidth,
-            int textureViewHeight, int maxWidth, int maxHeight, Size aspectRatio) {
+    private static Size chooseOptimalSize(@NotNull Size[] choices, int textureViewWidth,
+                                          int textureViewHeight, int maxWidth, int maxHeight, @NotNull Size aspectRatio) {
 
         // Collect the supported resolutions that are at least as big as the preview Surface
         List<Size> bigEnough = new ArrayList<>();
@@ -459,26 +475,63 @@ public class Camera2BasicFragment extends Fragment
         }
     }
 
+    @NotNull
+    @Contract(" -> new")
     public static Camera2BasicFragment newInstance() {
         return new Camera2BasicFragment();
     }
     // Layout을 inflate한 결과를 View로 리턴
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_camera2_basic, container, false);
     }
     // View를 선언
     @Override
-    public void onViewCreated(final View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, Bundle savedInstanceState) {
         final ImageButton picutreButton  = view.findViewById(R.id.picture);
-        view.findViewById(R.id.picture).setOnClickListener(this);
+        picutreButton.setOnClickListener(this);
         view.findViewById(R.id.info).setOnClickListener(this);
-        view.findViewById(R.id.view_switch).setOnClickListener(this);
-        view.findViewById(R.id.flashButton).setOnClickListener(this);
-        view.findViewById(R.id.listsavebutton).setOnClickListener(this);
+        final Button viewButton = view.findViewById(R.id.view_switch);
+        viewButton.setOnClickListener(this);
+        final Button flashButton = view.findViewById(R.id.flashButton);
+        flashButton.setOnClickListener(this);
+        final Button listButton = view.findViewById(R.id.listsavebutton);
+        listButton.setOnClickListener(this);
         mTextureView = view.findViewById(R.id.texture);
+
+        if(NEAR_VIEW == VIEW_WHAT)
+        {
+            viewButton.setText(R.string.nearview);
+            viewButton.setTextColor(ContextCompat.getColor(getContext(), R.color.darkorangeColor));
+
+        } else {
+            viewButton.setText(R.string.farview);
+            viewButton.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
+        }
+
+        if(FLASH_ALLWAYS == FLASH_WHAT)
+        {
+            flashButton.setText(R.string.flon);
+            flashButton.setTextColor(ContextCompat.getColor(getContext(), R.color.darkorangeColor));
+
+        } else if(FLASH_NO == FLASH_WHAT) {
+            flashButton.setText(R.string.floff);
+            flashButton.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
+        } else if(FLASH_AUTO == FLASH_WHAT) {
+            flashButton.setText(R.string.flauto);
+            flashButton.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
+        }
+
+        if(LIST_SAVE == LIST_WHAT)
+        {
+            listButton.setText(R.string.listSave);
+            listButton.setTextColor(ContextCompat.getColor(getContext(), R.color.darkorangeColor));
+        } else {
+            listButton.setText(R.string.listNoSave);
+            listButton.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
+        }
 
         view.findViewById(R.id.picture).setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -968,6 +1021,7 @@ public class Camera2BasicFragment extends Fragment
             e.printStackTrace();
         }
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -990,15 +1044,14 @@ public class Camera2BasicFragment extends Fragment
             //근경 원경 변경 시
             case R.id.view_switch: {
                 final Button viewS = view.findViewById(R.id.view_switch);
-                String switchCkecked = viewS.getText().toString();
-                if("근경".equals(switchCkecked))
+                if(NEAR_VIEW == VIEW_WHAT)
                 {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             viewS.setText(R.string.farview);
                             viewS.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
-                            ((CameraActivity) getActivity()).setAorB("B");
+                            VIEW_WHAT = FAR_VIEW;
                         }
                     });
                 } else {
@@ -1007,7 +1060,7 @@ public class Camera2BasicFragment extends Fragment
                         public void run() {
                             viewS.setText(R.string.nearview);
                             viewS.setTextColor(ContextCompat.getColor(getContext(), R.color.darkorangeColor));
-                            ((CameraActivity) getActivity()).setAorB("A");
+                            VIEW_WHAT = NEAR_VIEW;
                         }
                     });
                 }
@@ -1016,8 +1069,7 @@ public class Camera2BasicFragment extends Fragment
             //flash 변경 시
             case R.id.flashButton: {
                 final Button viewS = view.findViewById(R.id.flashButton);
-                String switchCkecked = viewS.getText().toString();
-                if("Flash ON".equals(switchCkecked))
+                if(FLASH_ALLWAYS == FLASH_WHAT)
                 {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -1028,7 +1080,7 @@ public class Camera2BasicFragment extends Fragment
                         }
                     });
 
-                } else if("Flash OFF".equals(switchCkecked)) {
+                } else if(FLASH_NO == FLASH_WHAT) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -1037,7 +1089,7 @@ public class Camera2BasicFragment extends Fragment
                             FLASH_WHAT = FLASH_AUTO;
                         }
                     });
-                } else if("Flash AUTO".equals(switchCkecked)) {
+                } else if(FLASH_AUTO == FLASH_WHAT) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -1052,15 +1104,14 @@ public class Camera2BasicFragment extends Fragment
             //리스트 저장 변경 시
             case R.id.listsavebutton: {
                 final Button viewS = view.findViewById(R.id.listsavebutton);
-                String switchCkecked = viewS.getText().toString();
-                if("리스트 저장".equals(switchCkecked))
+                if(LIST_SAVE == LIST_WHAT)
                 {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             viewS.setText(R.string.listNoSave);
                             viewS.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
-                            ((CameraActivity) getActivity()).setListIsSave(false);
+                            LIST_WHAT = LIST_UNSAVE;
                         }
                     });
                 } else {
@@ -1069,7 +1120,7 @@ public class Camera2BasicFragment extends Fragment
                         public void run() {
                             viewS.setText(R.string.listSave);
                             viewS.setTextColor(ContextCompat.getColor(getContext(), R.color.darkorangeColor));
-                            ((CameraActivity) getActivity()).setListIsSave(true);
+                            LIST_WHAT = LIST_SAVE;
                         }
                     });
                 }

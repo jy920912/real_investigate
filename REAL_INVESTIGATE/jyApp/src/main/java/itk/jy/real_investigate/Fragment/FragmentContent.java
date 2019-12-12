@@ -1,5 +1,6 @@
 package itk.jy.real_investigate.Fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
@@ -13,11 +14,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -41,6 +44,7 @@ import java.util.Map;
 import itk.jy.real_investigate.CameraActivity;
 import itk.jy.real_investigate.Internet.FtpManager;
 import itk.jy.real_investigate.MainActivity;
+import itk.jy.real_investigate.MapService.ftpSendDialogFragment;
 import itk.jy.real_investigate.Preference.PreferenceManager;
 import itk.jy.real_investigate.R;
 
@@ -51,9 +55,9 @@ public class FragmentContent extends Fragment {
     private Handler handler = new Handler();
     private ImageButton takePicture;
     private ImageButton takeImages;
-    private Switch captureSwitch;
-    private Switch sendSwitch;
-    private Switch dronSwitch;
+    private CheckBox captureSwitch;
+    private CheckBox sendSwitch;
+    private CheckBox dronSwitch;
     private Button sendFileButton;
     private ListView imageListView;
     private TextView addressText;
@@ -66,10 +70,9 @@ public class FragmentContent extends Fragment {
     private SimpleAdapter adpater;
     private FtpManager ftpManager;
     private ProgressBar ftpGrassBar;
-    private ProgressDialog ftpDialog;
     private final int takePicture_OK = 1110;
     private final int selectPicture_OK = 1112;
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,7 +88,6 @@ public class FragmentContent extends Fragment {
         sendFileButton.setEnabled(sendFileButtonEnable);
         imageListView  = rootView.findViewById(R.id.image_listView);
         ftpGrassBar     = rootView.findViewById(R.id.progressBar);
-        ftpDialog       = new ProgressDialog(mContext);
         addressText     = rootView.findViewById(R.id.address);
         pnuText          = rootView.findViewById(R.id.pnu);
 
@@ -98,7 +100,7 @@ public class FragmentContent extends Fragment {
                 if (isExistCameraApplication()) {
                     Intent cameraApp = new Intent(getActivity().getApplication(), CameraActivity.class);
                     //주소 카메라 Activity로 보내기
-                    cameraApp.putExtra("pnuName",pnuText.getText().toString());
+                    cameraApp.putExtra("pnuName",addressText.getText().toString());
 
                     getActivity().startActivityForResult(cameraApp,takePicture_OK);
                     getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadeout);
@@ -135,9 +137,8 @@ public class FragmentContent extends Fragment {
         sendFileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ftpDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                ftpDialog.setMessage("사진 전송중...");
-                ftpDialog.show();
+               final ftpSendDialogFragment frfr = ftpSendDialogFragment.getInstance();
+                frfr.show(getFragmentManager(),frfr.DIALOGNAME);
                 sendFileButton.setEnabled(false);
                 sendFileButtonEnable = false;
                 new Thread(new Runnable() {
@@ -151,7 +152,7 @@ public class FragmentContent extends Fragment {
                         }
                         //리스트가 없으면
                         if(imageCount == 0) {
-                            ftpDialog.dismiss();
+                            frfr.dismiss();
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -176,7 +177,7 @@ public class FragmentContent extends Fragment {
                         }
                         //ftp 연결 실패 시
                         else {
-                            ftpDialog.dismiss();
+                            frfr.dismiss();
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -187,19 +188,35 @@ public class FragmentContent extends Fragment {
                             });
                             return;
                         }
-                        ftpDialog.setProgress(0);
                         ftpGrassBar.setProgress(0);
-                        ftpDialog.setMax(imageCount);
+                        frfr.setMax(imageCount);
+                        frfr.setProgress(0);
                         ftpGrassBar.setMax(imageCount);
                         for(int i = 0; i<imageCount; i++) {
                             Object upFilePath1 = imageListView.getAdapter().getItem(i);
                             Map<String, String> fff = (Map<String, String>) upFilePath1;
                             String upFilePath = fff.get("Path");
                             String FileName = fff.get("Num") + ".jpg";
+                            frfr.setFilePath(upFilePath);
                             //ftp서버에 파일 업로드
                             boolean upres = ftpManager.ftpUploadFile(upFilePath, FileName, "/");
+                            boolean ftpDown = frfr.getDismiss();
+                            if(ftpDown) {
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        sendFileButton.setEnabled(true);
+                                        sendFileButtonEnable = true;
+                                        ftpGrassBar.setProgress(0);
+                                        try {
+                                            StyleableToast.makeText(getActivity().getApplicationContext(), "전송 취소", Toast.LENGTH_SHORT, R.style.mytoast).show();
+                                        }catch (Exception e){}
+                                    }
+                                });
+                                return;
+                            }
                             if(upres) { //전송 성공 시
-                                ftpDialog.setProgress(i+1);
+                                frfr.setProgress(i+1);
                                 ftpGrassBar.setProgress(i+1);
                                 //전송 시 파일 삭제
                                 File f = new File(upFilePath);
@@ -209,7 +226,7 @@ public class FragmentContent extends Fragment {
                             }
                         }
                         ftpManager.ftpDisconnect();
-                        ftpDialog.dismiss();
+                        frfr.dismiss();
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -219,7 +236,6 @@ public class FragmentContent extends Fragment {
                                 imageListView.setAdapter(null);
                                 sendSwitch.setChecked(true);
                                 ftpGrassBar.setProgress(0);
-                                ftpDialog.setProgress(0);
                                 func_switchAndMapReload();
                                 try {
                                     StyleableToast.makeText(getActivity().getApplicationContext(), "전송 종료", Toast.LENGTH_SHORT, R.style.mytoast).show();
@@ -365,7 +381,12 @@ public class FragmentContent extends Fragment {
                 int plusCount = 0;
                 for(String _key:extras.keySet()) {
                     imageData = new HashMap<>();
-                    String imageName = addressText.getText().toString() + "_"+ (itemCount+plusCount+1);
+                    //String imageName = addressText.getText().toString() + "_"+ (itemCount+plusCount+1);
+                    String imageName = extras.get(_key).toString();
+                    int Idx = imageName.lastIndexOf("/");
+                    imageName = imageName.substring(Idx+1);
+                    Idx = imageName.lastIndexOf(".");
+                    imageName = imageName.substring(0,Idx);
                     imageData.put("Num",imageName);
                     imageData.put("Path",extras.get(_key).toString());
                     imageList.add(imageData);
@@ -406,7 +427,7 @@ public class FragmentContent extends Fragment {
                         for(int i=0; i<clipData.getItemCount() ; i++) {
                             Uri uri = clipData.getItemAt(i).getUri();
                             String path = getRealPath(uri);
-                            String imageName = pnuText.getText().toString() + "_"+ (itemCount+i+1);
+                            String imageName = addressText.getText().toString() + "_"+ (itemCount+i+1);
                             imageData = new HashMap<>();
                             imageData.put("Num",imageName);
                             imageData.put("Path",path);
@@ -447,7 +468,6 @@ public class FragmentContent extends Fragment {
         double lat = 0;
         String sido = PreferenceManager.getString(mContext, "sidoCode");
         String selMap = getSelectMap(mContext);
-        String selGps = getGpsFix(mContext);
         boolean selJjk = getJijuk(mContext);
         boolean selJbn = getJibun(mContext);
         Location location = ((MainActivity) getActivity()).func_init_location();

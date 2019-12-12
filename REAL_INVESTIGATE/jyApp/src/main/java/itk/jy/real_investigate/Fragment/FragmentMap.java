@@ -12,6 +12,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -35,9 +36,7 @@ public class FragmentMap extends Fragment {
     public WebView mWebView;
     private ImageButton GPSButton;
     private ImageButton PointButton;
-    private WebSettings mWebSettings;
     private static boolean pointTF = false;
-    private static final int VIRTUAL_DISPLAY_FLAGS = DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY | DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,7 +72,7 @@ public class FragmentMap extends Fragment {
         mWebView.setBackgroundColor(0x00000000);
         mWebView.setLayerType(WebView.LAYER_TYPE_HARDWARE,null);
         //mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        mWebSettings = mWebView.getSettings();
+        WebSettings mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true); //javascript 실행
         mWebSettings.setJavaScriptCanOpenWindowsAutomatically(true); //window.open()을 사용할 수 있도록 설정
         mWebSettings.setSupportMultipleWindows(false); //여러개 윈도우 사용 제한
@@ -144,13 +143,6 @@ public class FragmentMap extends Fragment {
         return rootView;
     }
 
-    //webView 현재 화면 캡쳐
-    public void webViewCapture(String FileName) {
-        final String fName = FileName;
-        ((MainActivity)getActivity()).startProjection(fName);
-
-    }
-
     //웹에서 지적정보 가져오기
     public class AndroidBridge {
         @JavascriptInterface
@@ -167,9 +159,9 @@ public class FragmentMap extends Fragment {
             //FragmentContent 내 TextView, Switch 가져오기
             final TextView addressT = ((Activity)FragmentContent.mContext).findViewById(R.id.address);
             final TextView pnuT     = ((Activity)FragmentContent.mContext).findViewById(R.id.pnu);
-            final Switch captureOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.capture_switch);
-            final Switch sendOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.send_switch);
-            final Switch dronOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.dron_switch);
+            final CheckBox captureOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.capture_switch);
+            final CheckBox sendOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.send_switch);
+            final CheckBox dronOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.dron_switch);
 
             //FragmentConent에 내용 추가
             getActivity().runOnUiThread(new Runnable() {

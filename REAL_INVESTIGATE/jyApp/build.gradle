@@ -25,6 +25,7 @@ dependencies {
   implementation files('libs\\commons-net-3.6-sources.jar')
   implementation files('libs\\commons-net-3.6.jar')
   implementation files('libs\\commons-net-examples-3.6.jar')
+    implementation 'org.jetbrains:annotations-java5:15.0'
 }
 
 repositories {
