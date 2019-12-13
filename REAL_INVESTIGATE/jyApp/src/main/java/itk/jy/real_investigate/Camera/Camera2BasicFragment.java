@@ -503,24 +503,24 @@ public class Camera2BasicFragment extends Fragment
 
         if(NEAR_VIEW == VIEW_WHAT)
         {
-            viewButton.setText(R.string.nearview);
+            viewButton.setText(R.string.near_view);
             viewButton.setTextColor(ContextCompat.getColor(getContext(), R.color.darkorangeColor));
 
         } else {
-            viewButton.setText(R.string.farview);
+            viewButton.setText(R.string.far_view);
             viewButton.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
         }
 
         if(FLASH_ALLWAYS == FLASH_WHAT)
         {
-            flashButton.setText(R.string.flon);
+            flashButton.setText(R.string.fl_on);
             flashButton.setTextColor(ContextCompat.getColor(getContext(), R.color.darkorangeColor));
 
         } else if(FLASH_NO == FLASH_WHAT) {
-            flashButton.setText(R.string.floff);
+            flashButton.setText(R.string.fl_off);
             flashButton.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
         } else if(FLASH_AUTO == FLASH_WHAT) {
-            flashButton.setText(R.string.flauto);
+            flashButton.setText(R.string.fl_auto);
             flashButton.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
         }
 
@@ -1049,7 +1049,7 @@ public class Camera2BasicFragment extends Fragment
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            viewS.setText(R.string.farview);
+                            viewS.setText(R.string.far_view);
                             viewS.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
                             VIEW_WHAT = FAR_VIEW;
                         }
@@ -1058,7 +1058,7 @@ public class Camera2BasicFragment extends Fragment
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            viewS.setText(R.string.nearview);
+                            viewS.setText(R.string.near_view);
                             viewS.setTextColor(ContextCompat.getColor(getContext(), R.color.darkorangeColor));
                             VIEW_WHAT = NEAR_VIEW;
                         }
@@ -1074,7 +1074,7 @@ public class Camera2BasicFragment extends Fragment
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            viewS.setText(R.string.floff);
+                            viewS.setText(R.string.fl_off);
                             viewS.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
                             FLASH_WHAT = FLASH_NO;
                         }
@@ -1084,7 +1084,7 @@ public class Camera2BasicFragment extends Fragment
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            viewS.setText(R.string.flauto);
+                            viewS.setText(R.string.fl_auto);
                             viewS.setTextColor(ContextCompat.getColor(getContext(), R.color.orangeColor));
                             FLASH_WHAT = FLASH_AUTO;
                         }
@@ -1093,7 +1093,7 @@ public class Camera2BasicFragment extends Fragment
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            viewS.setText(R.string.flon);
+                            viewS.setText(R.string.fl_on);
                             viewS.setTextColor(ContextCompat.getColor(getContext(), R.color.darkorangeColor));
                             FLASH_WHAT = FLASH_ALLWAYS;
                         }

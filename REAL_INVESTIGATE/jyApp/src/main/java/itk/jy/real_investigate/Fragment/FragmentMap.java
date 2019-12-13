@@ -109,17 +109,25 @@ public class FragmentMap extends Fragment {
                 Location location = ((MainActivity)getActivity()).func_init_location();
                 if(!((MainActivity)getActivity()).tackerOnOff) {
                     //위치고정 O
-                    ((MainActivity) getActivity()).tackerOnOff = true;
-                    mWebView.loadUrl("javascript:android_receiveMSGWithCenter("+location.getLongitude()+","+location.getLatitude()+")");
-                    StyleableToast.makeText(mContext,"내위치 찾기 시작", Toast.LENGTH_LONG, R.style.gpsFixToast).show();
-                    GPSButton.setImageResource(R.drawable.gps_fix);
+                    try {
+                        ((MainActivity) getActivity()).tackerOnOff = true;
+                        mWebView.loadUrl("javascript:android_receiveMSGWithCenter(" + location.getLongitude() + "," + location.getLatitude() + ")");
+                        StyleableToast.makeText(mContext, "내위치 찾기 시작", Toast.LENGTH_LONG, R.style.gpsFixToast).show();
+                        GPSButton.setImageResource(R.drawable.gps_fix);
+                    }catch(Exception e) {
+                        e.getStackTrace();
+                    }
                 }
                 else {
                     //위치고정 X
-                    ((MainActivity) getActivity()).tackerOnOff = false;
-                    mWebView.loadUrl("javascript:android_receiveMSGExceptCenter("+location.getLongitude()+","+location.getLatitude()+")");
-                    StyleableToast.makeText(mContext,"내위치 찾기 해제", Toast.LENGTH_LONG,R.style.gpsNonfixToast).show();
-                    GPSButton.setImageResource(R.drawable.gps_nonfix);
+                    try {
+                        ((MainActivity) getActivity()).tackerOnOff = false;
+                        mWebView.loadUrl("javascript:android_receiveMSGExceptCenter(" + location.getLongitude() + "," + location.getLatitude() + ")");
+                        StyleableToast.makeText(mContext, "내위치 찾기 해제", Toast.LENGTH_LONG, R.style.gpsNonfixToast).show();
+                        GPSButton.setImageResource(R.drawable.gps_nonfix);
+                    }catch (Exception e) {
+                        e.getStackTrace();
+                    }
                 }
             }
         });
@@ -146,7 +154,7 @@ public class FragmentMap extends Fragment {
     //웹에서 지적정보 가져오기
     public class AndroidBridge {
         @JavascriptInterface
-        public void android_sendMSG(String address, String pnu, String cpnf,String sdnf, String drnf) {
+        public void android_sendMSG(String address, String pnu, String cpnf,String sdnf, String drnf,String jimok, String jiga, String area) {
             final String addressText = address;
             final String pnuText = pnu;
             final String cpnfT = cpnf;
@@ -156,12 +164,18 @@ public class FragmentMap extends Fragment {
             ((MainActivity)getActivity()).onOff[1] = sdnf;
             ((MainActivity)getActivity()).onOff[2] = drnf;
 
+            PreferenceManager.setString(mContext,"address",address);
+            PreferenceManager.setString(mContext,"pnu",pnu);
+            PreferenceManager.setString(mContext,"jimok",jimok);
+            PreferenceManager.setString(mContext,"jiga",jiga);
+            PreferenceManager.setString(mContext,"area",area);
+
             //FragmentContent 내 TextView, Switch 가져오기
             final TextView addressT = ((Activity)FragmentContent.mContext).findViewById(R.id.address);
             final TextView pnuT     = ((Activity)FragmentContent.mContext).findViewById(R.id.pnu);
             final CheckBox captureOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.capture_switch);
             final CheckBox sendOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.send_switch);
-            final CheckBox dronOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.dron_switch);
+            final CheckBox dronOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.dr_switch);
 
             //FragmentConent에 내용 추가
             getActivity().runOnUiThread(new Runnable() {
@@ -189,6 +203,7 @@ public class FragmentMap extends Fragment {
             screenShotContentDialogFragment frfr = screenShotContentDialogFragment.getInstance(addressText);
             frfr.show(getFragmentManager(),frfr.DIALOGNAME);
         }
+
         @JavascriptInterface
         public void android_sendNoAddress(String address) {
             StyleableToast.makeText(mContext,address+" - 해당 주소를 찾을 수 없습니다.",Toast.LENGTH_LONG,R.style.mytoast).show();

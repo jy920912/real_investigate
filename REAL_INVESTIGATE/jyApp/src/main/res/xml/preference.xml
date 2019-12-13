@@ -15,15 +15,17 @@
              />
 
         <SwitchPreference
-            android:key="jijukOnOff"
+            android:key="jjk_OnOff"
             android:title="지적도 출력"
             android:defaultValue="true"
             android:icon="@drawable/jijuk_icon"
             android:dialogIcon="@drawable/jijuk_icon_b"
             android:summary="지적도 출력을 설정합니다." />
+
         <SwitchPreference
-            android:key="jibunOnOff"
+            android:key="jbn_OnOff"
             android:title="지번 출력"
+            android:defaultValue="true"
             android:icon="@drawable/jibun_icon"
             android:dialogIcon="@drawable/jibun_icon_b"
             android:summary="지번 출력을 설정합니다." />
@@ -32,7 +34,6 @@
             android:key="selectGPSFix"
             android:title="내 위치 고정"
             android:defaultValue="NONFIX"
-
             android:entries="@array/gps_list"
             android:entryValues="@array/gps_values"
             android:icon="@drawable/gps_fix_org"

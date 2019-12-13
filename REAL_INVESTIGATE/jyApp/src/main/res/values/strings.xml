@@ -2,14 +2,14 @@
 <resources>
 	<string name="app_name" translatable="false">실태조사</string>
 
-    <!-- config Pnael -->
+    <!-- config Panel -->
     <string name="action_hide">Hide Panel</string>
     <string name="action_show">Show Panel</string>
     <string name="action_anchor_enable">Enable Anchor Point</string>
     <string name="action_anchor_disable">Disable Anchor Point</string>
 
 	<!-- login Panel -->
-	<string name="appid">아이디</string>
+	<string name="app_id">아이디</string>
     <string name="password">비밀번호</string>
     <string name="loginSave">아이디 저장</string>
     <string name="action_sign_in">로그인</string>
@@ -30,31 +30,40 @@
     <string name="send_onOff">전송 여부</string>
     <string name="send_off">전송 미완료</string>
     <string name="send_on">전송 완료</string>
-    <string name="dron_onOff">드론촬영 여부</string>
-    <string name="dron_off">촬영 대상지</string>
-    <string name="dron_on">촬영 완료지</string>
+    <string name="dr_onOff">드론촬영 여부</string>
+    <string name="dr_off">촬영 대상지</string>
+    <string name="dr_on">촬영 완료지</string>
     <string name="contents_info">속성 상세보기</string>
     <string name="picture_info">사진 정보</string>
     <string name="send_pic">사진 전송</string>
 
+    <!-- more_contents Panel -->
+    <string name="more_content">상세 정보</string>
+    <string name="jjk_content">토지 정보</string>
+    <string name="ji_mok">지목</string>
+    <string name="ji_ga">지가</string>
+    <string name="area">면적</string>
+
     <!-- spotDialog -->
-    <string name="spotdialogtitle">행동을 선택하세요.</string>
-    <string name="spotcheck">대상지 표시 제거</string>
+    <string name="spot_dialog_title">행동을 선택하세요.</string>
+    <string name="spot_check">대상지 표시 제거</string>
 
     <!-- ftpDialog -->
-    <string name="ftpdialogtitle">사진 전송 중...</string>
-    <string name="zeropercent">0%</string>
-    <string name="countsend">0/1</string>
+    <string name="ftp_dialog_title">사진 전송 중&#8230;</string>
+    <string name="zero_percent">0%</string>
+    <string name="count_send">0/1</string>
+    <string name="ftp_cancel">전송 중지</string>
+
     <!-- config Panel -->
     <string name="configName">설정</string>
 
     <!-- camera -->
     <string name="picture">사진</string>
-    <string name="farview">원경</string>
-    <string name="nearview">근경</string>
-    <string name="flon">Flash ON</string>
-    <string name="floff">Flash OFF</string>
-    <string name="flauto">Flash AUTO</string>
+    <string name="far_view">원경</string>
+    <string name="near_view">근경</string>
+    <string name="fl_on">Flash ON</string>
+    <string name="fl_off">Flash OFF</string>
+    <string name="fl_auto">Flash AUTO</string>
     <string name="listSave">리스트 저장</string>
     <string name="listNoSave">리스트 미저장</string>
     <string name="description_info">Info</string>

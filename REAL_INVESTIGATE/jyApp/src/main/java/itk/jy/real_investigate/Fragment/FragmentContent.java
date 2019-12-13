@@ -2,7 +2,6 @@ package itk.jy.real_investigate.Fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -26,7 +24,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +42,7 @@ import itk.jy.real_investigate.CameraActivity;
 import itk.jy.real_investigate.Internet.FtpManager;
 import itk.jy.real_investigate.MainActivity;
 import itk.jy.real_investigate.MapService.ftpSendDialogFragment;
+import itk.jy.real_investigate.MoreContentActivity;
 import itk.jy.real_investigate.Preference.PreferenceManager;
 import itk.jy.real_investigate.R;
 
@@ -53,8 +51,6 @@ import static itk.jy.real_investigate.Preference.ConfigPreference.*;
 
 public class FragmentContent extends Fragment {
     private Handler handler = new Handler();
-    private ImageButton takePicture;
-    private ImageButton takeImages;
     private CheckBox captureSwitch;
     private CheckBox sendSwitch;
     private CheckBox dronSwitch;
@@ -66,7 +62,6 @@ public class FragmentContent extends Fragment {
     static private boolean sendFileButtonEnable = true;
     public static Context mContext;
     private static ArrayList<HashMap<String, String>> imageList = new ArrayList<HashMap<String, String>>();
-    private HashMap<String, String> imageData;
     private SimpleAdapter adpater;
     private FtpManager ftpManager;
     private ProgressBar ftpGrassBar;
@@ -79,11 +74,12 @@ public class FragmentContent extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_content, container, false);
         mContext = container.getContext();
 
-        takePicture     = rootView.findViewById(R.id.take_picture);
-        takeImages      = rootView.findViewById(R.id.take_image);
+        ImageButton takePicture     = rootView.findViewById(R.id.take_picture);
+        ImageButton takeImages      = rootView.findViewById(R.id.take_image);
+        Button moreContentB = rootView.findViewById(R.id.Btn_moreProperty);
         captureSwitch   = rootView.findViewById(R.id.capture_switch);
         sendSwitch      = rootView.findViewById(R.id.send_switch);
-        dronSwitch      = rootView.findViewById(R.id.dron_switch);
+        dronSwitch      = rootView.findViewById(R.id.dr_switch);
         sendFileButton = rootView.findViewById(R.id.sendButton);
         sendFileButton.setEnabled(sendFileButtonEnable);
         imageListView  = rootView.findViewById(R.id.image_listView);
@@ -129,6 +125,15 @@ public class FragmentContent extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 imageList.remove(position);
                 adpater.notifyDataSetChanged();
+            }
+        });
+
+        moreContentB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent configIntent = new Intent(getActivity(), MoreContentActivity.class);
+                startActivity(configIntent);
+                getActivity().overridePendingTransition(R.anim.leftin,R.anim.leftout);
             }
         });
 
@@ -324,7 +329,7 @@ public class FragmentContent extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            dronSwitch.setText(R.string.dron_on);
+                            dronSwitch.setText(R.string.dr_on);
                             dronSwitch.setTextColor(ContextCompat.getColor(mContext, R.color.capture_on_color));
 
                         }
@@ -335,7 +340,7 @@ public class FragmentContent extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            dronSwitch.setText(R.string.dron_off);
+                            dronSwitch.setText(R.string.dr_off);
                             dronSwitch.setTextColor(ContextCompat.getColor(mContext, R.color.capture_off_color));
                         }
                     });
@@ -379,8 +384,9 @@ public class FragmentContent extends Fragment {
                 });
                 int itemCount = imageListView.getCount();
                 int plusCount = 0;
+
                 for(String _key:extras.keySet()) {
-                    imageData = new HashMap<>();
+                    HashMap<String, String> imageData = new HashMap<>();
                     //String imageName = addressText.getText().toString() + "_"+ (itemCount+plusCount+1);
                     String imageName = extras.get(_key).toString();
                     int Idx = imageName.lastIndexOf("/");
@@ -428,7 +434,7 @@ public class FragmentContent extends Fragment {
                             Uri uri = clipData.getItemAt(i).getUri();
                             String path = getRealPath(uri);
                             String imageName = addressText.getText().toString() + "_"+ (itemCount+i+1);
-                            imageData = new HashMap<>();
+                            HashMap<String, String> imageData = new HashMap<>();
                             imageData.put("Num",imageName);
                             imageData.put("Path",path);
                             imageList.add(imageData);

@@ -21,12 +21,14 @@
         android:layout_height="wrap_content"
         android:stretchColumns="1">
         <TableRow
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp">
 
             <TextView
+                android:background="@drawable/tableborder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -36,16 +38,20 @@
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 />
         </TableRow>
 
         <TableRow
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp">
 
             <TextView
+                android:background="@drawable/tableborder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -55,23 +61,23 @@
                 android:id="@+id/pnu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 />
         </TableRow>
 
         <TableRow
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp">
 
             <TextView
+                android:background="@drawable/tableborder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:text="@string/capture_onOff"
                 />
             <androidx.appcompat.widget.AppCompatCheckBox
@@ -80,26 +86,23 @@
                 android:layout_height="wrap_content"
                 android:text="@string/capture_off"
                 android:textColor="@color/capture_off_color"
-                android:switchPadding="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:layout_gravity="start"/>
         </TableRow>
 
         <TableRow
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp">
 
             <TextView
+                android:background="@drawable/tableborder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:text="@string/send_onOff"
                 />
             <androidx.appcompat.widget.AppCompatCheckBox
@@ -108,36 +111,32 @@
                 android:layout_height="wrap_content"
                 android:text="@string/send_off"
                 android:textColor="@color/capture_off_color"
-                android:switchPadding="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:layout_gravity="start"/>
         </TableRow>
 
         <TableRow
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="1dp"
             android:layout_marginBottom="5dp">
 
             <TextView
+                android:background="@drawable/tableborder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/dron_onOff"
+                android:text="@string/dr_onOff"
                 />
 
             <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/dron_switch"
+                android:id="@+id/dr_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/dron_off"
+                android:text="@string/dr_off"
                 android:textColor="@color/capture_off_color"
-                android:switchPadding="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:layout_gravity="start"/>

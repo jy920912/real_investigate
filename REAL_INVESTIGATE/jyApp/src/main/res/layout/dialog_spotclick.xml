@@ -23,7 +23,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:text="@string/spotdialogtitle"/>
+            android:text="@string/spot_dialog_title"/>
 
     </LinearLayout>
     <LinearLayout
@@ -45,7 +45,7 @@
             android:id="@+id/spot_check"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/spotcheck"
+            android:text="@string/spot_check"
             android:checked="true"
             android:textColor="@color/bbbblack"
             android:paddingLeft="10dp"

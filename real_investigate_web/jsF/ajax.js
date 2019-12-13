@@ -37,7 +37,7 @@ function ajax_searchInfomation(name, sido, loc, AorW, onOff){
       var spData = data.split('\r\n').join('');
       var Data = spData.slice(0,-1);
       var coord = Data.split("|");
-      if(AorW == 'A') window.android.android_sendMSG(coord[0],coord[1],onOff[0],onOff[1],onOff[2]);
+      if(AorW == 'A') window.android.android_sendMSG(coord[0],coord[1],onOff[0],onOff[1],onOff[2],coord[2],coord[3],coord[4]);
       else if(AorW == 'W') {
         //마커 생성 onOff는 array[3]
         ajax_createMarker(name, sido, loc, onOff);

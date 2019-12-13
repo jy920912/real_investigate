@@ -41,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import itk.jy.real_investigate.Internet.InternetManager;
 import itk.jy.real_investigate.library.SlidingUpPanelLayout;
 import itk.jy.real_investigate.library.SlidingUpPanelLayout.PanelState;
 import itk.jy.real_investigate.Fragment.FragmentContent;
@@ -138,8 +139,24 @@ public class MainActivity extends AppCompatActivity {
 
     //웹에 좌표 보내기(javascript 이용)
     public void func_output_lonlat(double lon, double lat) {
+        if(InternetManager.getConnectivityStatus(getApplicationContext()) == 3) {
+            gpsCkeck.stopUsingGPS();
+            // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
+            AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+            alBuilder.setMessage("인터넷이 연결되지 않았습니다. 인터넷을 연결하십시오.");
+
+            alBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            alBuilder.setTitle("인터넷 연결상태 확인");
+            alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
+        }
         try {
             FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);
+            if(map == null) return;
             if (tackerOnOff) {
                 try {
                     map.mWebView.loadUrl("javascript:android_receiveMSGWithCenter(" + lon + "," + lat + ")");
@@ -314,6 +331,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        SlidingUpPanelLayout mLayout = findViewById(R.id.sliding_layout);
+        if(mLayout.getPanelState() == PanelState.EXPANDED) {
+            mLayout.setPanelState(PanelState.COLLAPSED);
+            return;
+        }
         // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
         AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
         alBuilder.setMessage("프로그램을 종료하시겠습니까?");

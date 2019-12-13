@@ -35,26 +35,26 @@ public class ConfigPreference {
     //지적선 출력 여부 get
     public static boolean getJijuk(Context context) {
         SharedPreferences prefer = getDefaultSharedPreferences(context);
-        return prefer.getBoolean("jijukOnOff",true);
+        return prefer.getBoolean("jjk_OnOff",true);
     }
     //지적선 출력 여부 set
     public static void setJijuk(Context context, boolean value) {
         SharedPreferences prefer = getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefer.edit();
-        editor.putBoolean("jijukOnOff", value);
+        editor.putBoolean("jjk_OnOff", value);
         editor.apply();
     }
 
     //지번 출력 여부 get
     public static boolean getJibun(Context context) {
         SharedPreferences prefer = getDefaultSharedPreferences(context);
-        return prefer.getBoolean("jibunOnOff",true);
+        return prefer.getBoolean("jbn_OnOff",true);
     }
     //지번 출력 여부 set
     public static void setJibun(Context context, boolean value) {
         SharedPreferences prefer = getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefer.edit();
-        editor.putBoolean("jibunOnOff", value);
+        editor.putBoolean("jbn_OnOff", value);
         editor.apply();
     }
 

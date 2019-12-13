@@ -540,7 +540,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
             mDragView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!isEnabled() || !isTouchEnabled()) return;
+                   /* if (!isEnabled() || !isTouchEnabled()) return;
                     if (mSlideState != PanelState.EXPANDED && mSlideState != PanelState.ANCHORED) {
                         if (mAnchorPoint < 1.0f) {
                             setPanelState(PanelState.ANCHORED);
@@ -549,7 +549,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
                         }
                     } else {
                         setPanelState(PanelState.COLLAPSED);
-                    }
+                    }*/
                 }
             });
             ;

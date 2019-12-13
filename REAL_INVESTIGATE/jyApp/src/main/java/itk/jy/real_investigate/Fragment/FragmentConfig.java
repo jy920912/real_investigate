@@ -11,11 +11,10 @@ import itk.jy.real_investigate.R;
 
 
 public class FragmentConfig extends PreferenceFragmentCompat {
-    ImageButton backButton;
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preference);
-        backButton = getActivity().findViewById(R.id.backButton);
+        ImageButton backButton = getActivity().findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -23,5 +22,4 @@ public class FragmentConfig extends PreferenceFragmentCompat {
             }
         });
     }
-
 }

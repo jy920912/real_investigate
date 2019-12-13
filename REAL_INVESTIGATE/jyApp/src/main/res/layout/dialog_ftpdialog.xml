@@ -24,7 +24,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:text="@string/ftpdialogtitle"/>
+            android:text="@string/ftp_dialog_title"/>
 
     </LinearLayout>
     <LinearLayout
@@ -60,14 +60,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="9"
-                android:text="@string/zeropercent"
+                android:text="@string/zero_percent"
                 android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/ftp_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/countsend" />
+                android:text="@string/count_send" />
 
         </LinearLayout>
 
@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="취소"
+            android:text="@string/ftp_cancel"
             android:textColor="@color/wwwwhite"
             android:background="@drawable/round_org_button"/>
     </LinearLayout>

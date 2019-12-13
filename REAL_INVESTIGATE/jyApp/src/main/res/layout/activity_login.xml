@@ -32,11 +32,11 @@
             android:spinnerMode="dialog"/>
 
         <EditText
-            android:id="@+id/appid"
+            android:id="@+id/app_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:hint="@string/appid"
+            android:hint="@string/app_id"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:singleLine="true" />

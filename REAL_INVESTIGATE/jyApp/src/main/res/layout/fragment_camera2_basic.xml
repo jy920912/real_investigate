@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/wwwwhite"
-            android:text="@string/nearview"
+            android:text="@string/near_view"
             android:textColor="@color/darkorangeColor"/>
 
         <Button
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/wwwwhite"
-            android:text="@string/flauto"
+            android:text="@string/fl_auto"
             android:textColor="@color/darkorangeColor"
             android:layout_weight="1"
             />

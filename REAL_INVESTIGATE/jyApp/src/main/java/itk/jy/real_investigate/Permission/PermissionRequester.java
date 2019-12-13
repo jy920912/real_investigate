@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat;
 
 public class PermissionRequester {
     /** * 요청 AndroidOS의 버젼이 오레오 이상 버젼이 아닐 경우 */
-    public static final int NOT_SUPPORT_VERSION = 2;
+    private static final int NOT_SUPPORT_VERSION = 2;
     /** * 요청 권한을 이미 가지고 있을 경우 */
     public static final int ALREADY_GRANTED = -1;
     /** * 권한을 System에게 요청한 경우 * Activity의 onRequestPermissionsResult() 로 결과 리턴됨. */
