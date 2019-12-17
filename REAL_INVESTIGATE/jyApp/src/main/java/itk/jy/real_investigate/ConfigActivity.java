@@ -2,6 +2,8 @@ package itk.jy.real_investigate;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -18,6 +20,13 @@ public class ConfigActivity extends AppCompatActivity {
         //설정 fragment 등록
         FragmentTransaction contentTransaction = getSupportFragmentManager().beginTransaction();
         contentTransaction.replace(R.id.configLayout, new FragmentConfig()).commit();
+        ImageButton backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
     }
 

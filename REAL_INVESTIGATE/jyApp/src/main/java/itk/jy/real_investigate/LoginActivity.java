@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
             alBuilder.setTitle("안드로이드 버전 충돌");
+            alBuilder.setCancelable(false);
             alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
         }
         //시도코드 콤보박스
@@ -165,6 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
             alBuilder.setTitle("인터넷 연결상태 확인");
+            alBuilder.setCancelable(false);
             alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
         }
 

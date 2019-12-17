@@ -9,11 +9,17 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="5dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="5dp"
         android:layout_gravity="center"
         android:text="@string/content"
         android:textAlignment="center"
+        android:textColor="@color/bbbblack"
+        android:background="@drawable/name_border"
         android:textSize="20sp" />
 
     <TableLayout
@@ -21,7 +27,6 @@
         android:layout_height="wrap_content"
         android:stretchColumns="1">
         <TableRow
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
@@ -32,6 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
+                android:textColor="@color/bbbblack"
                 android:text="@string/address"
                 />
             <TextView
@@ -55,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
+                android:textColor="@color/bbbblack"
                 android:text="@string/pnu"
                 />
             <TextView
@@ -65,71 +72,33 @@
                 android:paddingRight="10dp"
                 />
         </TableRow>
+    </TableLayout>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:stretchColumns="1">
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp">
 
-        <TableRow
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp">
-
-            <TextView
-                android:background="@drawable/tableborder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="@string/capture_onOff"
-                />
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/capture_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/capture_off"
                 android:textColor="@color/capture_off_color"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:layout_gravity="start"/>
-        </TableRow>
 
-        <TableRow
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp">
-
-            <TextView
-                android:background="@drawable/tableborder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="@string/send_onOff"
-                />
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/send_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/send_off"
                 android:textColor="@color/capture_off_color"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:layout_gravity="start"/>
-        </TableRow>
-
-        <TableRow
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="5dp">
-
-            <TextView
-                android:background="@drawable/tableborder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="@string/dr_onOff"
-                />
+                android:layout_gravity="center"/>
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/dr_switch"
@@ -137,11 +106,10 @@
                 android:layout_height="wrap_content"
                 android:text="@string/dr_off"
                 android:textColor="@color/capture_off_color"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:layout_gravity="start"/>
-        </TableRow>
+                android:layout_gravity="end"/>
+    </TableRow>
     </TableLayout>
+
     <Button
         android:id="@+id/Btn_moreProperty"
         android:text="@string/contents_info"
@@ -153,48 +121,51 @@
 
     <TextView
         android:id="@+id/Tv_picText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="5dp"
         android:text="@string/picture_info"
         android:textAlignment="center"
+        android:textColor="@color/bbbblack"
+        android:background="@drawable/name_border"
         android:textSize="20sp" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageButton
-                    android:id="@+id/take_picture"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/add_a_photo_black"
-                    android:background="@drawable/round_org_button"/>
 
-                <ImageButton
-                    android:id="@+id/take_image"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/app_name"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginRight="1dp"
-                    android:src="@drawable/add_a_image_black"
-                    android:background="@drawable/round_org_button"/>
-            </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/take_picture"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/add_a_photo_black"
+            android:background="@drawable/round_org_button"/>
+
+        <ImageButton
+            android:id="@+id/take_image"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:src="@drawable/add_a_image_black"
+            android:background="@drawable/round_org_button"/>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -212,10 +183,14 @@
         android:textSize="17sp"
         android:textColor="@color/wwwwhite"
         />
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/image_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:scrollbars="vertical"
         android:layout_gravity="center" />
 
 

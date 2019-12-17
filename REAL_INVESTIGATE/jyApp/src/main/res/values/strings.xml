@@ -24,18 +24,17 @@
     <string name="content" translatable="false">지번 정보</string>
     <string name="address" translatable="false">지번주소</string>
     <string name="pnu" translatable="false">PNU</string>
-    <string name="capture_onOff">촬영 여부</string>
     <string name="capture_off">촬영 대상지</string>
     <string name="capture_on">촬영 완료지</string>
-    <string name="send_onOff">전송 여부</string>
     <string name="send_off">전송 미완료</string>
-    <string name="send_on">전송 완료</string>
-    <string name="dr_onOff">드론촬영 여부</string>
-    <string name="dr_off">촬영 대상지</string>
-    <string name="dr_on">촬영 완료지</string>
+    <string name="send_on">전송   완료</string>
+    <string name="dr_off">드론 미촬영</string>
+    <string name="dr_on">드론   촬영</string>
     <string name="contents_info">속성 상세보기</string>
     <string name="picture_info">사진 정보</string>
     <string name="send_pic">사진 전송</string>
+    <string name="picture_name">사진 이름</string>
+    <string name="picture_path">사진 경로</string>
 
     <!-- more_contents Panel -->
     <string name="more_content">상세 정보</string>

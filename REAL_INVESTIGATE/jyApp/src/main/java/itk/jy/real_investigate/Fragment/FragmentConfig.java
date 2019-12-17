@@ -1,8 +1,6 @@
 package itk.jy.real_investigate.Fragment;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragmentCompat;
@@ -14,12 +12,5 @@ public class FragmentConfig extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preference);
-        ImageButton backButton = getActivity().findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
     }
 }

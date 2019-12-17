@@ -140,19 +140,21 @@ public class MainActivity extends AppCompatActivity {
     //웹에 좌표 보내기(javascript 이용)
     public void func_output_lonlat(double lon, double lat) {
         if(InternetManager.getConnectivityStatus(getApplicationContext()) == 3) {
-            gpsCkeck.stopUsingGPS();
-            // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
-            AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
-            alBuilder.setMessage("인터넷이 연결되지 않았습니다. 인터넷을 연결하십시오.");
+                gpsCkeck.stopUsingGPS();
+                // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
+                AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+                alBuilder.setMessage("인터넷이 연결되지 않았습니다. 인터넷을 연결하십시오.");
 
-            alBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            });
-            alBuilder.setTitle("인터넷 연결상태 확인");
-            alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
+                alBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+                alBuilder.setTitle("인터넷 연결상태 확인");
+                alBuilder.setCancelable(false);
+                alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
+            return;
         }
         try {
             FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);

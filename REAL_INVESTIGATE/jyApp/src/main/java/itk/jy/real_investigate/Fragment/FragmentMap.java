@@ -2,7 +2,6 @@ package itk.jy.real_investigate.Fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.hardware.display.DisplayManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,9 +63,8 @@ public class FragmentMap extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
         //WebView 세팅
-        mWebView = (WebView) rootView.findViewById(R.id.mWebView);
+        mWebView = rootView.findViewById(R.id.mWebView);
 
-        mWebView.enableSlowWholeDocumentDraw();
         mWebView.addJavascriptInterface(new AndroidBridge(), "android"); //Web에서 Android 함수 사용
         mWebView.setBackgroundColor(0x00000000);
         mWebView.setLayerType(WebView.LAYER_TYPE_HARDWARE,null);

@@ -13,36 +13,41 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.muddzdev.styleabletoast.StyleableToast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import itk.jy.real_investigate.CameraActivity;
+import itk.jy.real_investigate.ImageViewerActivity;
 import itk.jy.real_investigate.Internet.FtpManager;
 import itk.jy.real_investigate.MainActivity;
 import itk.jy.real_investigate.MapService.ftpSendDialogFragment;
 import itk.jy.real_investigate.MoreContentActivity;
+import itk.jy.real_investigate.PathList.CustomAdapter;
+import itk.jy.real_investigate.PathList.ListGetSet;
 import itk.jy.real_investigate.Preference.PreferenceManager;
 import itk.jy.real_investigate.R;
 
@@ -55,14 +60,14 @@ public class FragmentContent extends Fragment {
     private CheckBox sendSwitch;
     private CheckBox dronSwitch;
     private Button sendFileButton;
-    private ListView imageListView;
+    private RecyclerView imageListView;
+    private ArrayList<ListGetSet> mArrayList;
+    private CustomAdapter mAdapter;
     private TextView addressText;
     private TextView pnuText;
 
     static private boolean sendFileButtonEnable = true;
     public static Context mContext;
-    private static ArrayList<HashMap<String, String>> imageList = new ArrayList<HashMap<String, String>>();
-    private SimpleAdapter adpater;
     private FtpManager ftpManager;
     private ProgressBar ftpGrassBar;
     private final int takePicture_OK = 1110;
@@ -82,10 +87,52 @@ public class FragmentContent extends Fragment {
         dronSwitch      = rootView.findViewById(R.id.dr_switch);
         sendFileButton = rootView.findViewById(R.id.sendButton);
         sendFileButton.setEnabled(sendFileButtonEnable);
-        imageListView  = rootView.findViewById(R.id.image_listView);
         ftpGrassBar     = rootView.findViewById(R.id.progressBar);
         addressText     = rootView.findViewById(R.id.address);
         pnuText          = rootView.findViewById(R.id.pnu);
+
+        //recyclerView 생성 및 설정
+        imageListView  = rootView.findViewById(R.id.image_listView);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        imageListView.setLayoutManager(mLinearLayoutManager);
+
+        mArrayList = new ArrayList<>();
+        mAdapter = new CustomAdapter(mArrayList);
+        imageListView.setAdapter(mAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(imageListView.getContext(),
+                mLinearLayoutManager.getOrientation());
+        imageListView.addItemDecoration(dividerItemDecoration);
+
+        imageListView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+             @Override
+             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                 if(e.getAction() == MotionEvent.ACTION_UP) {
+                     View child = rv.findChildViewUnder(e.getX(),e.getY());
+                     int position = rv.getChildAdapterPosition(child);
+                     String filePath = mArrayList.get(position).getFilePath();
+                     Intent imageApp = new Intent(getActivity().getApplication(), ImageViewerActivity.class);
+
+                     imageApp.putExtra("filePath",filePath);
+
+                     getActivity().startActivity(imageApp);
+                 }
+                 return false;
+             }
+
+             @Override
+             public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+             }
+
+             @Override
+             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+             }
+         });
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(imageListView);
 
         //MAP Fragment에서 preference에 저장한 데이터 가져오기
         //카메라 버튼 클릭
@@ -119,14 +166,6 @@ public class FragmentContent extends Fragment {
                 getActivity().startActivityForResult(Intent.createChooser(intent,"Select Picture"), selectPicture_OK);
             }
         });
-        //리스트 클릭 시 삭제
-        imageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                imageList.remove(position);
-                adpater.notifyDataSetChanged();
-            }
-        });
 
         moreContentB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,7 +190,7 @@ public class FragmentContent extends Fragment {
                     public void run() {
                         int imageCount;
                         try{
-                            imageCount = imageListView.getAdapter().getCount();
+                            imageCount = imageListView.getAdapter().getItemCount();
                         }catch (Exception e) {
                             imageCount =  0;
                         }
@@ -198,10 +237,9 @@ public class FragmentContent extends Fragment {
                         frfr.setProgress(0);
                         ftpGrassBar.setMax(imageCount);
                         for(int i = 0; i<imageCount; i++) {
-                            Object upFilePath1 = imageListView.getAdapter().getItem(i);
-                            Map<String, String> fff = (Map<String, String>) upFilePath1;
-                            String upFilePath = fff.get("Path");
-                            String FileName = fff.get("Num") + ".jpg";
+                            String upFilePath = mArrayList.get(i).getFilePath();
+                            String FileName = mArrayList.get(i).getFileName()+".jpg";
+                            Map<String, String> fff = null;
                             frfr.setFilePath(upFilePath);
                             //ftp서버에 파일 업로드
                             boolean upres = ftpManager.ftpUploadFile(upFilePath, FileName, "/");
@@ -213,9 +251,10 @@ public class FragmentContent extends Fragment {
                                         sendFileButton.setEnabled(true);
                                         sendFileButtonEnable = true;
                                         ftpGrassBar.setProgress(0);
+                                        ftpManager.ftpDisconnect();
                                         try {
                                             StyleableToast.makeText(getActivity().getApplicationContext(), "전송 취소", Toast.LENGTH_SHORT, R.style.mytoast).show();
-                                        }catch (Exception e){}
+                                        }catch (Exception e){e.getStackTrace();}
                                     }
                                 });
                                 return;
@@ -237,8 +276,8 @@ public class FragmentContent extends Fragment {
                             public void run() {
                                 sendFileButton.setEnabled(true);
                                 sendFileButtonEnable = true;
-                                imageList.clear();
-                                imageListView.setAdapter(null);
+                                mArrayList.clear();
+                                imageListView.getAdapter().notifyDataSetChanged();
                                 sendSwitch.setChecked(true);
                                 ftpGrassBar.setProgress(0);
                                 func_switchAndMapReload();
@@ -349,16 +388,26 @@ public class FragmentContent extends Fragment {
             }
         });
 
-        //리스트가 있을 시 리스트에 추가
-        if(!imageList.isEmpty()) {
-            adpater = new SimpleAdapter(mContext, imageList,
-                    android.R.layout.simple_list_item_2,new String[]{"Num","Path"},
-                    new int[]{android.R.id.text1,android.R.id.text2});
-            imageListView.setAdapter(adpater);
-        }
-
         return rootView;
     }
+
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return true;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            // 삭제되는 아이템의 포지션을 가져온다
+            final int position = viewHolder.getAdapterPosition();
+            // 데이터의 해당 포지션을 삭제한다
+            mArrayList.remove(position);
+            // 아답타에게 알린다
+            imageListView.getAdapter().notifyItemRemoved(position);
+        }
+    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -382,27 +431,18 @@ public class FragmentContent extends Fragment {
                         func_switchAndMapReload();
                     }
                 });
-                int itemCount = imageListView.getCount();
-                int plusCount = 0;
 
                 for(String _key:extras.keySet()) {
-                    HashMap<String, String> imageData = new HashMap<>();
-                    //String imageName = addressText.getText().toString() + "_"+ (itemCount+plusCount+1);
                     String imageName = extras.get(_key).toString();
                     int Idx = imageName.lastIndexOf("/");
                     imageName = imageName.substring(Idx+1);
                     Idx = imageName.lastIndexOf(".");
                     imageName = imageName.substring(0,Idx);
-                    imageData.put("Num",imageName);
-                    imageData.put("Path",extras.get(_key).toString());
-                    imageList.add(imageData);
-                    plusCount++;
+                    String imagePath = extras.get(_key).toString();
+                    ListGetSet imageData = new ListGetSet(imageName, imagePath);
+                    mArrayList.add(imageData);
                 }
-                adpater = new SimpleAdapter(mContext, imageList,
-                        android.R.layout.simple_list_item_2,new String[]{"Num","Path"},
-                        new int[]{android.R.id.text1,android.R.id.text2});
-                imageListView.setAdapter(adpater);
-                adpater.notifyDataSetChanged();
+                mAdapter.notifyDataSetChanged();
             }
         }
         else if(requestCode == selectPicture_OK && resultCode == Activity.RESULT_OK) {
@@ -424,7 +464,7 @@ public class FragmentContent extends Fragment {
                             func_switchAndMapReload();
                         }
                     });
-                    int itemCount = imageListView.getCount();
+                    int itemCount = imageListView.getAdapter().getItemCount();
                     ClipData clipData = data.getClipData();
                     if(clipData.getItemCount() > 9) {
                         StyleableToast.makeText(mContext, "사진은 9장까지 선택 가능합니다.", Toast.LENGTH_LONG, R.style.mytoast).show();
@@ -434,16 +474,10 @@ public class FragmentContent extends Fragment {
                             Uri uri = clipData.getItemAt(i).getUri();
                             String path = getRealPath(uri);
                             String imageName = addressText.getText().toString() + "_"+ (itemCount+i+1);
-                            HashMap<String, String> imageData = new HashMap<>();
-                            imageData.put("Num",imageName);
-                            imageData.put("Path",path);
-                            imageList.add(imageData);
+                            ListGetSet imageData = new ListGetSet(imageName, path);
+                            mArrayList.add(imageData);
                         }
-                        adpater = new SimpleAdapter(mContext, imageList,
-                                android.R.layout.simple_list_item_2,new String[]{"Num","Path"},
-                                new int[]{android.R.id.text1,android.R.id.text2});
-                        imageListView.setAdapter(adpater);
-                        adpater.notifyDataSetChanged();
+                        mAdapter.notifyDataSetChanged();
                     }
                 }
             }

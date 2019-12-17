@@ -2,13 +2,10 @@ package itk.jy.real_investigate.MapService;
 
 import android.app.Dialog;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -17,15 +14,12 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import org.w3c.dom.Text;
-
 import itk.jy.real_investigate.R;
 
 public class ftpSendDialogFragment extends DialogFragment {
 
     public static final String DIALOGNAME = "dialog_event";
     private ProgressBar ftpBar;
-    private Button cancelB;
     private TextView ftp_percent;
     private TextView ftp_count;
     private TextView file_path;
@@ -44,7 +38,7 @@ public class ftpSendDialogFragment extends DialogFragment {
 
         Dialog dialog = getDialog();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        cancelB = v.findViewById(R.id.ftp_cancel);
+        Button cancelB = v.findViewById(R.id.ftp_cancel);
         ftpBar = v.findViewById(R.id.ftpBar);
         file_path = v.findViewById(R.id.file_path);
         ftp_percent = v.findViewById(R.id.ftp_percent);

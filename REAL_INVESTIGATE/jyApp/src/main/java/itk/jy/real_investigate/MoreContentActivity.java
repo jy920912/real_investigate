@@ -1,6 +1,5 @@
 package itk.jy.real_investigate;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
