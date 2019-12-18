@@ -182,14 +182,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1110) {
+        if(requestCode == 1110 || requestCode == 1112) {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.slide_contents);
             if (fragment != null) {
                 fragment.onActivityResult(requestCode, resultCode, data);
             }
         }
-        else if(requestCode == 4532) {
+        else if(requestCode == SCREENSHOT_REQUEST_CODE) {
             if(resultCode != RESULT_OK) {
+                FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);
+                map.mWebView.loadUrl("javascript:android_receiveMSGPointVisible(true)");
                 return;
             }
             sMediaProjection = mProjectionManager.getMediaProjection(resultCode, data);
@@ -221,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private static final int REQUEST_CODE = 4532;
+    private static final int SCREENSHOT_REQUEST_CODE = 4532;
     private static String FILENAME;
     private static boolean spotTF;
     File storeDirectory;
@@ -309,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
             FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);
             map.mWebView.loadUrl("javascript:android_receiveMSGPointVisible(false)");
         }
-        startActivityForResult(mProjectionManager.createScreenCaptureIntent(), REQUEST_CODE);
+        startActivityForResult(mProjectionManager.createScreenCaptureIntent(), SCREENSHOT_REQUEST_CODE);
     }
 
     private void stopProjection() {

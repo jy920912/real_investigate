@@ -54,7 +54,7 @@ import itk.jy.real_investigate.R;
 import static itk.jy.real_investigate.Preference.ConfigPreference.*;
 
 
-public class FragmentContent extends Fragment {
+public class FragmentContent extends Fragment implements CustomAdapter.OnListItemSelectedInterface{
     private Handler handler = new Handler();
     private CheckBox captureSwitch;
     private CheckBox sendSwitch;
@@ -72,6 +72,17 @@ public class FragmentContent extends Fragment {
     private ProgressBar ftpGrassBar;
     private final int takePicture_OK = 1110;
     private final int selectPicture_OK = 1112;
+    private int LIST_DRAG_MOTION = 0;
+    private int isMoveAction = 0;
+    @Override
+    public void onItemSelected(View v, int position) {
+        String filePath = mArrayList.get(position).getFilePath();
+        Intent imageApp = new Intent(getActivity().getApplication(), ImageViewerActivity.class);
+
+        imageApp.putExtra("filePath", filePath);
+
+        getActivity().startActivity(imageApp);
+    }
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,39 +108,12 @@ public class FragmentContent extends Fragment {
         imageListView.setLayoutManager(mLinearLayoutManager);
 
         mArrayList = new ArrayList<>();
-        mAdapter = new CustomAdapter(mArrayList);
+        mAdapter = new CustomAdapter(mArrayList, this);
         imageListView.setAdapter(mAdapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(imageListView.getContext(),
                 mLinearLayoutManager.getOrientation());
         imageListView.addItemDecoration(dividerItemDecoration);
-
-        imageListView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-             @Override
-             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                 if(e.getAction() == MotionEvent.ACTION_UP) {
-                     View child = rv.findChildViewUnder(e.getX(),e.getY());
-                     int position = rv.getChildAdapterPosition(child);
-                     String filePath = mArrayList.get(position).getFilePath();
-                     Intent imageApp = new Intent(getActivity().getApplication(), ImageViewerActivity.class);
-
-                     imageApp.putExtra("filePath",filePath);
-
-                     getActivity().startActivity(imageApp);
-                 }
-                 return false;
-             }
-
-             @Override
-             public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-             }
-
-             @Override
-             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-             }
-         });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(imageListView);
@@ -161,7 +145,7 @@ public class FragmentContent extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
-                //intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 getActivity().startActivityForResult(Intent.createChooser(intent,"Select Picture"), selectPicture_OK);
             }

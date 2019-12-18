@@ -17,6 +17,11 @@ import itk.jy.real_investigate.R;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> {
 
+    public interface OnListItemSelectedInterface{
+        void onItemSelected(View v, int position);
+    }
+    private OnListItemSelectedInterface mListener;
+
     private ArrayList<ListGetSet> mList;
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -28,12 +33,20 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             super(view);
             fileName = view.findViewById(R.id.filename_listitem);
             filePath = view.findViewById(R.id.filepath_listitem);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    mListener.onItemSelected(v, position);
+                }
+            });
         }
     }
 
 
-    public CustomAdapter(ArrayList<ListGetSet> list) {
+    public CustomAdapter(ArrayList<ListGetSet> list, OnListItemSelectedInterface listener) {
         this.mList = list;
+        this.mListener = listener;
     }
 
 
