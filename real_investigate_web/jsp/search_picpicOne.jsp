@@ -5,7 +5,7 @@
   String s_pnu  = request.getParameter("PNU");
   String s_sido = request.getParameter("SIDO");
   try{
-    String s_Query = "select * from "+s_sido+"_real_investigate.tb_pictureyesno where PNU = ?";
+    String s_Query = "select * from real_investigate_"+s_sido+".tb_pictureyesno where PNU = ?";
     pstmt = conn.prepareStatement(s_Query);
     pstmt.setString(1, s_pnu);
     rs = pstmt.executeQuery();

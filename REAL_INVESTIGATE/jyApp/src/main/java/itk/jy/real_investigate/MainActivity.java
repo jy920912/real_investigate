@@ -136,24 +136,30 @@ public class MainActivity extends AppCompatActivity {
         location = gpsCkeck.getLocation();
         return location;
     }
-
+    boolean downApp = false;
     //웹에 좌표 보내기(javascript 이용)
     public void func_output_lonlat(double lon, double lat) {
+        if(downApp) return;
         if(InternetManager.getConnectivityStatus(getApplicationContext()) == 3) {
-                gpsCkeck.stopUsingGPS();
-                // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
-                AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
-                alBuilder.setMessage("인터넷이 연결되지 않았습니다. 인터넷을 연결하십시오.");
+            gpsCkeck.stopUsingGPS();
+            // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
+            AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+            alBuilder.setMessage("인터넷이 연결되지 않았습니다. 인터넷을 연결하십시오.");
 
-                alBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
-                alBuilder.setTitle("인터넷 연결상태 확인");
-                alBuilder.setCancelable(false);
+            alBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            alBuilder.setTitle("인터넷 연결상태 확인");
+            alBuilder.setCancelable(false);
+            try {
                 alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
+            }catch(Exception e) {
+                return;
+            }
+            downApp = !downApp;
             return;
         }
         try {
@@ -207,12 +213,13 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String STORE_DIRECTORY = "MyCameraView/"+FILENAME+".png";
                 storeDirectory = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), STORE_DIRECTORY);
-
                 // display metrics
                 DisplayMetrics metrics = getResources().getDisplayMetrics();
                 mDensity = metrics.densityDpi;
                 mDisplay = getWindowManager().getDefaultDisplay();
-
+                try {
+                    Thread.sleep(200);
+                }catch(InterruptedException ex){}
                 // create virtual display depending on device width / height
                 createVirtualDisplay();
 
@@ -238,59 +245,63 @@ public class MainActivity extends AppCompatActivity {
     private int mDensity;
     private int mWidth;
     private int mHeight;
+    private boolean screenTF = false;
 
     private class ImageAvailableListener implements ImageReader.OnImageAvailableListener{
         @Override
         public void onImageAvailable(ImageReader reader) {
-            Image image = null;
-            FileOutputStream fos = null;
-            Bitmap bitmap = null;
+            if(!screenTF) {
+                Image image = null;
+                FileOutputStream fos = null;
+                Bitmap bitmap = null;
 
-            try {
-                image = reader.acquireLatestImage();
-                if (image != null) {
-                    Image.Plane[] planes = image.getPlanes();
-                    ByteBuffer buffer = planes[0].getBuffer();
-                    int pixelStride = planes[0].getPixelStride();
-                    int rowStride = planes[0].getRowStride();
-                    int rowPadding = rowStride - pixelStride * mWidth;
-
-                    // create bitmap
-                    bitmap = Bitmap.createBitmap(mWidth + rowPadding / pixelStride, mHeight, Bitmap.Config.ARGB_8888);
-                    bitmap.copyPixelsFromBuffer(buffer);
-
-                    // write bitmap to a file
-                    fos = new FileOutputStream(storeDirectory);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (fos != null) {
                 try {
-                    fos.close();
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
+                    image = reader.acquireLatestImage();
+                    if (image != null) {
+                        Image.Plane[] planes = image.getPlanes();
+                        ByteBuffer buffer = planes[0].getBuffer();
+                        int pixelStride = planes[0].getPixelStride();
+                        int rowStride = planes[0].getRowStride();
+                        int rowPadding = rowStride - pixelStride * mWidth;
+
+                        // create bitmap
+                        bitmap = Bitmap.createBitmap(mWidth + rowPadding / pixelStride, mHeight, Bitmap.Config.ARGB_8888);
+                        bitmap.copyPixelsFromBuffer(buffer);
+
+                        // write bitmap to a file
+                        fos = new FileOutputStream(storeDirectory);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                    }
+                }
 
-            if (bitmap != null) {
-                bitmap.recycle();
-            }
+                if (bitmap != null) {
+                    bitmap.recycle();
+                }
 
-            if (image != null) {
-                image.close();
+                if (image != null) {
+                    image.close();
+                }
+                stopProjection();
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                mediaScanIntent.setData(Uri.fromFile(storeDirectory));
+                sendBroadcast(mediaScanIntent);
+                if (spotTF) {
+                    FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);
+                    map.mWebView.loadUrl("javascript:android_receiveMSGPointVisible(true)");
+                }
+                StyleableToast.makeText(getApplicationContext(), "스크린샷이 저장되었습니다.", Toast.LENGTH_LONG, R.style.mytoast).show();
+                screenTF = !screenTF;
             }
-            stopProjection();
-            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            mediaScanIntent.setData(Uri.fromFile(storeDirectory));
-            sendBroadcast(mediaScanIntent);
-            if(spotTF) {
-                FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);
-                map.mWebView.loadUrl("javascript:android_receiveMSGPointVisible(true)");
-            }
-            StyleableToast.makeText(getApplicationContext(),"스크린샷이 저장되었습니다.",Toast.LENGTH_LONG,R.style.mytoast).show();
         }
     }
 
@@ -305,6 +316,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startProjection(String fileName, boolean tf) {
+        screenTF = false;
         FILENAME = fileName;
         spotTF = tf;
         if(spotTF) {

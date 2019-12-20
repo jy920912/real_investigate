@@ -78,36 +78,37 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:stretchColumns="1">
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp">
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/capture_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start"
                 android:text="@string/capture_off"
-                android:textColor="@color/capture_off_color"
-                android:layout_gravity="start"/>
+                android:textColor="@color/capture_off_color" />
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/send_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="@string/send_off"
-                android:textColor="@color/capture_off_color"
-                android:layout_gravity="center"/>
+                android:textColor="@color/capture_off_color" />
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/dr_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="end"
                 android:text="@string/dr_off"
-                android:textColor="@color/capture_off_color"
-                android:layout_gravity="end"/>
-    </TableRow>
+                android:textColor="@color/capture_off_color" />
+        </TableRow>
     </TableLayout>
 
     <Button

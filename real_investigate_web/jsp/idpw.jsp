@@ -2,15 +2,17 @@
 <%@ include file ="mysql_conn.jsp" %>
 
 <%
-  String s_sido = request.getParameter("SIDO");
+  String id = request.getParameter("id");
+  String pw = request.getParameter("pw");
 
   try{
-    String s_Query = "select * from real_investigate_"+s_sido+".tb_pictureyesno";
+    String s_Query = "select count(id) ok from real_investigate_config.tb_user_info where id = ? and pw = ?";
     pstmt = conn.prepareStatement(s_Query);
+    pstmt.setString(1, id);
+    pstmt.setString(2, pw);
     rs = pstmt.executeQuery();
     while(rs.next()){
-      out.print(rs.getString("PNU")+"|"+rs.getString("PICTURE_OX")+"|"+rs.getString("SEND_OX")+"|"
-                +rs.getString("DRON_OX")+"|"+rs.getString("COORDX")+"|"+rs.getString("COORDY")+"|");
+      out.println(rs.getString("ok"));
     }
   }catch(Exception e){
     out.print(e);

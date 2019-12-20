@@ -1,5 +1,3 @@
-var compass = document.getElementsByClassName('ol-compass');
-compass.innerHTML = "↑";
 var lat = 36.42407749298651; //위도
 var lng = 127.406610175387; //경도
 var sidoCode = "44131";

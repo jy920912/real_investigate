@@ -388,7 +388,7 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
             final int position = viewHolder.getAdapterPosition();
             // 데이터의 해당 포지션을 삭제한다
             mArrayList.remove(position);
-            // 아답타에게 알린다
+            // 어댑터에게 알린다
             imageListView.getAdapter().notifyItemRemoved(position);
         }
     };

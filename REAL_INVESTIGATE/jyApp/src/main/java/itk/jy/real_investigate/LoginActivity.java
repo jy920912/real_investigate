@@ -4,8 +4,11 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,16 +24,27 @@ import androidx.core.content.ContextCompat;
 
 import com.muddzdev.styleabletoast.StyleableToast;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import itk.jy.real_investigate.Internet.InternetManager;
 import itk.jy.real_investigate.Preference.PreferenceManager;
+
+import static android.content.ContentValues.TAG;
 
 
 public class LoginActivity extends AppCompatActivity {
     EditText loginText;
     EditText passwordText;
     CheckBox loginSave;
+    Spinner sidoSpinner;
+    String id; String pw;
     ArrayList<String> permissions = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
             alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
         }
         //시도코드 콤보박스
-        final Spinner sidoSpinner = findViewById(R.id.sidocode);
+        sidoSpinner = findViewById(R.id.sidocode);
         ArrayAdapter sidoAdapter = ArrayAdapter.createFromResource(this, R.array.sidocode_list,
                 android.R.layout.simple_spinner_dropdown_item);
         sidoSpinner.setAdapter(sidoAdapter);
@@ -82,31 +96,19 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String id = loginText.getText().toString();
-                String pw = passwordText.getText().toString();
-                if("admin".equals(id)  && "1".equals(pw)) {
-                    //시도코드 저장
-                    String sidocode = sidoSpinner.getSelectedItem().toString().substring(0,5);
-                    PreferenceManager.setInt(getApplication(),"sidoNum",sidoSpinner.getSelectedItemPosition());
-                    PreferenceManager.setString(getApplication(),"sidoCode",sidocode);
-                    //아이디 저장여부
-                    if(loginSave.isChecked()) {
-                        PreferenceManager.setBoolean(getApplication(),"idSaveCheck",true);
-                        PreferenceManager.setString(getApplication(),"idSave", id);
-                    }
-                    else {
-                        PreferenceManager.setBoolean(getApplication(),"idSaveCheck",false);
-                        PreferenceManager.setString(getApplication(),"idSave", "");
-                    }
-                    //MainActivity 이동
-                    Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(mainIntent);
-                    overridePendingTransition(R.anim.fadeinlogin, R.anim.fadeoutlogin);
-                    finish();
-                }
-                else {
-                    StyleableToast.makeText(getApplication(),"아이디 혹은 비밀번호가 틀립니다.",Toast.LENGTH_LONG,R.style.mytoast).show();
-                }
+                byte[] data = null;
+                id = loginText.getText().toString();
+                try {
+                    data = id.getBytes("UTF-8");
+                }catch(UnsupportedEncodingException uee){}
+                String encId = Base64.encodeToString(data, Base64.NO_WRAP);
+                pw = passwordText.getText().toString();
+                try {
+                    data = pw.getBytes("UTF-8");
+                }catch(UnsupportedEncodingException uee){}
+                String encPw = Base64.encodeToString(data, Base64.NO_WRAP);
+                URLConnector task = new URLConnector();
+                task.execute(encId, encPw);
             }
         });
         //종료버튼 클릭 시
@@ -153,6 +155,10 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         //인터넷 연결 여부 확인
+        internetCon();
+
+    }
+    public void internetCon() {
         int InternetConnection = InternetManager.getConnectivityStatus(this);
         if(InternetConnection == 3) {
             // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
@@ -169,9 +175,7 @@ public class LoginActivity extends AppCompatActivity {
             alBuilder.setCancelable(false);
             alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
         }
-
     }
-
     @Override
     public void onBackPressed() {
         // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
@@ -195,5 +199,111 @@ public class LoginActivity extends AppCompatActivity {
         alBuilder.setTitle("프로그램 종료");
         alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
 
+    }
+    //아이디 비밀번호 확인 및 mainActivity 이동
+    public class URLConnector extends AsyncTask<String, Void, String> {
+        String res;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            internetCon();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            res = result;
+            if("1".equals(res)) {
+                //시도코드 저장
+                String sidocode = sidoSpinner.getSelectedItem().toString().substring(0,5);
+                PreferenceManager.setInt(getApplication(),"sidoNum",sidoSpinner.getSelectedItemPosition());
+                PreferenceManager.setString(getApplication(),"sidoCode",sidocode);
+                //아이디 저장여부
+                if(loginSave.isChecked()) {
+                    PreferenceManager.setBoolean(getApplication(),"idSaveCheck",true);
+                    PreferenceManager.setString(getApplication(),"idSave", id);
+                }
+                else {
+                    PreferenceManager.setBoolean(getApplication(),"idSaveCheck",false);
+                    PreferenceManager.setString(getApplication(),"idSave", "");
+                }
+                //MainActivity 이동
+                Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(mainIntent);
+                overridePendingTransition(R.anim.fadeinlogin, R.anim.fadeoutlogin);
+                finish();
+            }
+            else {
+                StyleableToast.makeText(getApplication(),"아이디 혹은 비밀번호가 틀립니다.",Toast.LENGTH_LONG,R.style.mytoast).show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String searchKeyword1 = params[0];
+            String searchKeyword2 = params[1];
+
+            String serverURL = "http://115.95.67.133:5088/real_investigate/jsp/idpw.jsp";
+            String postParameters = "id=" + searchKeyword1 + "&pw=" + searchKeyword2;
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+                res = sb.toString().trim();
+                return sb.toString().trim();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "InsertData: Error ", e);
+
+
+                return null;
+            }
+
+        }
     }
 }

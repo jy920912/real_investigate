@@ -5,7 +5,7 @@
   String s_address = request.getParameter("NAME");
   String s_sido    = request.getParameter("SIDO");
   try{
-    String s_Query = "select COORD_X, COORD_Y from "+s_sido+"_real_investigate.tb_coordxy where NOW_ADDR like ? ";
+    String s_Query = "select COORD_X, COORD_Y from real_investigate_"+s_sido+".tb_coordxy where NOW_ADDR like ? ";
     pstmt = conn.prepareStatement(s_Query);
     pstmt.setString(1, "%"+s_address);
     rs = pstmt.executeQuery();

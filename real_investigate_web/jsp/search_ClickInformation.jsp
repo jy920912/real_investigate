@@ -7,7 +7,7 @@
   int i_find = 0;
   try{
     String s_Query = "select PNU, NOW_ADDR, JIMOK, JIGA, AREA from "+
-                      s_sido+"_real_investigate.tb_reference "+
+                     "real_investigate_"+s_sido+".tb_reference "+
                      "where PNU = ? ";
     pstmt = conn.prepareStatement(s_Query);
     pstmt.setString(1, s_pnu);

@@ -12,7 +12,7 @@
   double d_coordy = Double.parseDouble(request.getParameter("Y"));
   try{
     if("U".equals(s_uid)){
-      String s_Query = "update "+s_sido+"_real_investigate.tb_pictureyesno set PICTURE_OX = ? "+
+      String s_Query = "update real_investigate_"+s_sido+".tb_pictureyesno set PICTURE_OX = ? "+
                        ",SEND_OX = ? ,DRON_OX = ? where PNU = ? ";
       pstmt = conn.prepareStatement(s_Query);
       pstmt.setString(1, s_capOnOff);
@@ -23,7 +23,7 @@
       out.print(result);
     }
     else if("I".equals(s_uid)){
-      String s_Query = "insert into "+s_sido+"_real_investigate.tb_pictureyesno values(?,?,?,?,?,?)";
+      String s_Query = "insert into real_investigate_"+s_sido+".tb_pictureyesno values(?,?,?,?,?,?)";
       pstmt = conn.prepareStatement(s_Query);
       pstmt.setString(1, s_pnu);
       pstmt.setString(2, s_capOnOff);
@@ -35,7 +35,7 @@
       out.print(result);
     }
     else if("D".equals(s_uid)){
-      String s_Query = "delete from "+s_sido+"_real_investigate.tb_pictureyesno where PNU = ?";
+      String s_Query = "delete from real_investigate_"+s_sido+".tb_pictureyesno where PNU = ?";
       pstmt = conn.prepareStatement(s_Query);
       pstmt.setString(1, s_pnu);
       int result = pstmt.executeUpdate();

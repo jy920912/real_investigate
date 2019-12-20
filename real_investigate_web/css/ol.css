@@ -8,8 +8,8 @@
 .ol-viewport .ol-unselectable{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 .ol-control{background-color:rgba(255,255,255,.4);border-radius:4px}
 .ol-zoom{background-color:rgba(255,255,255,0); top:0px;left:0px;opacity:0.8;cursor:pointer;width:auto}
-.ol-rotate{top:.5em;right:.5em;transition:opacity .25s linear,visibility 0s linear}
-.ol-rotate.ol-hidden{opacity:0;visibility:hidden;transition:opacity .25s linear,visibility 0s linear .25s}
+.ol-rotate{top:.5em;right:.5em;transition:opacity .25s linear,visibility 0s linear;}
+.ol-rotate.ol-hidden{opacity:1 !important;visibility:visible !important;transition:opacity .25s linear,visibility 0s linear .25s}
 .ol-zoom-extent{top:4.643em;left:.5em}
 .ol-full-screen{right:.5em;top:.5em}@media print{.ol-control{display:none}}
 .ol-control button{display:block;margin:1px;padding:0;color:#000;font-size:1.8em;font-weight:700;text-decoration:none;text-align:center;height:30px;width:30px;line-height:.4em;background-color:rgba(240,240,240,0.9);}
