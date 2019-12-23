@@ -228,6 +228,7 @@ public class LoginActivity extends AppCompatActivity {
                     PreferenceManager.setString(getApplication(),"idSave", "");
                 }
                 //MainActivity 이동
+                StyleableToast.makeText(getApplication(),"로그인되었습니다.",Toast.LENGTH_LONG,R.style.mytoast).show();
                 Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(mainIntent);
                 overridePendingTransition(R.anim.fadeinlogin, R.anim.fadeoutlogin);
