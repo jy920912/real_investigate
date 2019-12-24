@@ -30,6 +30,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -101,10 +102,14 @@ public class MainActivity extends AppCompatActivity {
                     StyleableToast.makeText(getApplication(),"내용이 없습니다.", Toast.LENGTH_SHORT,R.style.mytoast).show();
                 }
                 else {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                    if(imm == null) return;
                      FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);
+                     if(map == null) return;
                     try {
+                        imm.hideSoftInputFromWindow(searchButton.getWindowToken(),0);
                         map.mWebView.loadUrl("javascript:android_receiveSearch('"+searchT+"')");
-                    }catch(Exception e){
+                    }catch(NullPointerException e){
                         e.printStackTrace();
                     }
                 }
@@ -197,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
         else if(requestCode == SCREENSHOT_REQUEST_CODE) {
             if(resultCode != RESULT_OK) {
                 FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);
+                if(map == null) return;
                 map.mWebView.loadUrl("javascript:android_receiveMSGPointVisible(true)");
                 return;
             }
@@ -219,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 mDisplay = getWindowManager().getDefaultDisplay();
                 try {
                     Thread.sleep(200);
-                }catch(InterruptedException ex){}
+                }catch(InterruptedException ex){ ex.getStackTrace();}
                 // create virtual display depending on device width / height
                 createVirtualDisplay();
 
@@ -297,6 +303,7 @@ public class MainActivity extends AppCompatActivity {
                 sendBroadcast(mediaScanIntent);
                 if (spotTF) {
                     FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);
+                    if(map == null) return;
                     map.mWebView.loadUrl("javascript:android_receiveMSGPointVisible(true)");
                 }
                 StyleableToast.makeText(getApplicationContext(), "스크린샷이 저장되었습니다.", Toast.LENGTH_LONG, R.style.mytoast).show();
@@ -321,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
         spotTF = tf;
         if(spotTF) {
             FragmentMap map = (FragmentMap) getSupportFragmentManager().findFragmentById(R.id.mainMap);
+            if(map == null) return;
             map.mWebView.loadUrl("javascript:android_receiveMSGPointVisible(false)");
         }
         startActivityForResult(mProjectionManager.createScreenCaptureIntent(), SCREENSHOT_REQUEST_CODE);

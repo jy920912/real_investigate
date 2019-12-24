@@ -8,7 +8,64 @@ var epsg5181 = new Proj4js.Proj('EPSG:5181');
 var epsg5186 = new Proj4js.Proj('EPSG:5186');
 var bessel = new Proj4js.Proj('BESSEL');
 var grs80 = new Proj4js.Proj('GRS80');
-
+function ajax_clickPNU(loc) {
+  var wmsUrl = JIBUN_Source.getGetFeatureInfoUrl(loc, view.getResolution(), view.getProjection(), {
+    INFO_FORMAT: 'application/json',
+    FEATURE_COUNT: 1
+  });
+  var wmsPnu;
+  $.ajax({
+    url: wmsUrl,
+    dataType:'json',
+    error: function(xhr, status, err) {
+      return false;
+    },
+    success: function(data, status, xhr) {
+      var dif = new ol.format.GeoJSON(),
+      features = dif.readFeatures(data);
+      if(features.length) {
+        var feature = features[0];
+        wmsPnu = feature.get('PNU');
+      }
+      var url = 'http://115.95.67.133:5088/geoserver/SPATIAL_'+sidoCode+'/wfs?'+
+                'service=wfs&version=1.1.0&request=GetFeature&typename=SPATIAL_'+sidoCode+':'+sidoCode+'_JIBUN&'+
+                'outputFormat=application/json&srsname=EPSG:3857&CQL_Filter=PNU IN('+wmsPnu+')';
+      $.ajax({
+        url:url,
+        dataType:'json',
+        error: function(xhr, status, err) {
+          return false;
+        },
+        success: function(data, status, xhr) {
+          var vectorSource;
+          var dif = new ol.format.GeoJSON(),
+          features = dif.readFeatures(data);
+          if(features.length) {
+            var feature = features[0];
+            vectorSource = new ol.source.Vector({
+              format:new ol.format.GeoJSON(),
+              url:url,
+              strategy:ol.loadingstrategy.bbox
+            });
+            clickVector.setStyle(new ol.style.Style({
+              stroke: new ol.style.Stroke({
+                color: '#6fa8dc',
+                width:3
+              }),
+              fill: new ol.style.Fill({
+                color: 'rgba(255,255,255,0.4)'
+              })
+            }));
+            clickVector.setSource(vectorSource);
+          }
+          else {
+            clickVector.setSource();
+          }
+        }
+      })
+    }
+  });
+}
 //PNU 찾기 onOff는 array[3]
 function ajax_findPNU(loc,sido, AorW, onOff) {
   //선택한 좌표에 맞는 pnu 구하기

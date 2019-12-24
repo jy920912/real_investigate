@@ -18,13 +18,14 @@ public class ImageViewerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_imageview);
         Intent addressIntent = getIntent();
         String filePath = addressIntent.getStringExtra("filePath");
+        if(filePath == null) return;
         File imgFile = new File(filePath);
         if(imgFile.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             Matrix mtx = new Matrix();
             mtx.postRotate(90);
             Bitmap rtBitmap = Bitmap.createBitmap(myBitmap,0,0,myBitmap.getWidth(),myBitmap.getHeight(),mtx,true);
-            ImageView myImage = (ImageView) findViewById(R.id.picture_view);
+            ImageView myImage = findViewById(R.id.picture_view);
 
             myImage.setImageBitmap(rtBitmap);
         }

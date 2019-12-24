@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppBaseThemeBlu);
         setContentView(R.layout.activity_login);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
@@ -100,12 +101,12 @@ public class LoginActivity extends AppCompatActivity {
                 id = loginText.getText().toString();
                 try {
                     data = id.getBytes("UTF-8");
-                }catch(UnsupportedEncodingException uee){}
+                }catch(UnsupportedEncodingException uee){uee.getStackTrace();}
                 String encId = Base64.encodeToString(data, Base64.NO_WRAP);
                 pw = passwordText.getText().toString();
                 try {
                     data = pw.getBytes("UTF-8");
-                }catch(UnsupportedEncodingException uee){}
+                }catch(UnsupportedEncodingException uee){uee.getStackTrace();}
                 String encPw = Base64.encodeToString(data, Base64.NO_WRAP);
                 URLConnector task = new URLConnector();
                 task.execute(encId, encPw);

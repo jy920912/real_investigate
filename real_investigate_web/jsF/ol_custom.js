@@ -4,6 +4,7 @@ $(document).ready(function(){
 })
 var onOffSource = new ol.source.Vector();
 var onOffVector = new ol.layer.Vector();
+var clickVector = new ol.layer.Vector();
 var maxzoom = 19;
 if(mapType == "PHOTO") {
   maxzoom = 18;
@@ -33,7 +34,7 @@ var rotateinteractions = ol.interaction.defaults({
 
 var map = new ol.Map({
   target: 'spatial_map',
-  layers: [JIBUN_Layer,JIBUN_Label, RI_Layer, UMD_Layer, onOffVector],
+  layers: [JIBUN_Layer,JIBUN_Label, RI_Layer, UMD_Layer, clickVector, onOffVector],
   view: view,
   overlays: [marker],
   renderer: 'canvas',
@@ -67,6 +68,9 @@ function findClickMarger(e) {
     onOff[2] = clickSource.getProperties().dron;
     var pnu = clickSource.getProperties().pnu;
     ajax_searchInfomation(pnu, sidoCode, loc, 'A', onOff);
+  }
+  else {
+    ajax_clickPNU(loc);
   }
 }
 
