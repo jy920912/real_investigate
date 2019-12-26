@@ -48,6 +48,8 @@
 
         <activity android:name=".ConfigActivity"/>
 
+        <activity android:name=".PicListActivity"/>
+
         <activity android:name=".MoreContentActivity"/>
 
         <activity android:name=".ImageViewerActivity"/>

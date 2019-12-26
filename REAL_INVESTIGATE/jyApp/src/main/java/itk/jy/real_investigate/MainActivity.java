@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     EditText searchText;
     ImageButton searchButton;
     ImageButton configButton;
+    ImageButton picListButton;
     public SlidingUpPanelLayout mLayout;
 
     GPS gpsCkeck;
@@ -124,7 +125,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent configIntent = new Intent(MainActivity.this, ConfigActivity.class);
                 finish();
                 startActivity(configIntent);
-                overridePendingTransition(R.anim.leftin,R.anim.leftout);
+                overridePendingTransition(R.anim.rightin,R.anim.rightout);
+            }
+        });
+
+        picListButton = findViewById(R.id.listButton);
+        picListButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent configIntent = new Intent(MainActivity.this, PicListActivity.class);
+                startActivity(configIntent);
             }
         });
 

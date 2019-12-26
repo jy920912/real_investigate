@@ -65,8 +65,6 @@ public class CameraActivity extends AppCompatActivity {
         // 사용자가 권한을 수락한 경우
         if (result == PermissionRequester.ALREADY_GRANTED || result == PermissionRequester.REQUEST_PERMISSION) {
 
-        } else {
-
         }
 
     }
