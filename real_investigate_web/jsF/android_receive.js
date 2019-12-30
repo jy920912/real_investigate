@@ -22,6 +22,15 @@ function android_receiveMSGPointVisible(TF) {
     onOffVector.setVisible(false);
   }
 }
+//지번 visibility 설정
+function android_receiveMSGJibunVisible(TF) {
+  if(TF) {
+    JIBUN_Label.setVisible(true);
+  }
+  else {
+    JIBUN_Label.setVisible(false);
+  }
+}
 
 //검색
 function android_receiveSearch(searchT) {

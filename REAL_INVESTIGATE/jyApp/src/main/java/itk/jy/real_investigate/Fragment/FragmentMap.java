@@ -34,7 +34,9 @@ public class FragmentMap extends Fragment {
     public WebView mWebView;
     private ImageButton GPSButton;
     private ImageButton PointButton;
+    private ImageButton JibunButton;
     private static boolean pointTF = false;
+    private static boolean jibunTF = false;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class FragmentMap extends Fragment {
         String selGps = getGpsFix(mContext);
         boolean selJjk = getJijuk(mContext);
         boolean selJbn = getJibun(mContext);
+        jibunTF = selJbn;
 
         //GPS좌표 불러오기
         try {
@@ -142,6 +145,29 @@ public class FragmentMap extends Fragment {
                     PointButton.setImageResource(R.drawable.point_invisible);
                 }
                 pointTF = !pointTF;
+            }
+        });
+
+        JibunButton = rootView.findViewById(R.id.JibunVisible);
+        if(jibunTF) {
+            JibunButton.setImageResource(R.drawable.jibun_icon_b);
+            jibunTF = !jibunTF;
+        }
+        else {
+            JibunButton.setImageResource(R.drawable.jibun_icon_g);
+            jibunTF = !jibunTF;
+        }
+        JibunButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mWebView.loadUrl("javascript:android_receiveMSGJibunVisible("+jibunTF+")");
+                if(jibunTF) {
+                    JibunButton.setImageResource(R.drawable.jibun_icon_b);
+                }
+                else {
+                    JibunButton.setImageResource(R.drawable.jibun_icon_g);
+                }
+                jibunTF = !jibunTF;
             }
         });
 

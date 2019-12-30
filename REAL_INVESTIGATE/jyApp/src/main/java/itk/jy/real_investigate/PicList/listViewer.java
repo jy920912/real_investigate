@@ -41,4 +41,8 @@ public class listViewer extends LinearLayout {
         textView2.setText(singerItem.getPic());
     }
 
+    public void setColorItem(int ColorId) {
+        textView2.setTextColor(getResources().getColor(ColorId,null));
+    }
+
 }

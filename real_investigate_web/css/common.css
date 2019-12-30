@@ -17,5 +17,5 @@ a, a:hover{cursor:pointer;text-decoration:none;}
 .vw-notice{display: none;}
 .ol-control{background-color:rgba(255,255,255,.0) !important;}
 .ol-control:hover{background-color:rgba(255,255,255,.0) !important;}
-.ol-control button{font-size:0 !important;background-color:rgba(166,123,91,.7) !important; border-radius:50px !important; border:2px solid #964B00 !important;height:64px !important; width:64px !important; color:#000 !important;}
-.ol-compass{font-size:0 !important;width:50px;height:50px;background-image: url(../PIC/compass.png);background-repeat: no-repeat;background-position: center center;background-size:cover;};
+.ol-control button{font-size:0 !important;background-color:rgb(255,255,255) !important; border-radius:50px !important; height:40px !important; width:40px !important; color:#000 !important;}
+.ol-compass{font-size:0 !important;width:30px;height:30px;background-image: url(../PIC/compass.jpg);background-repeat: no-repeat;background-position: center center;}

@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.AppBaseThemeBlu);
+        //setTheme(R.style.AppBaseThemeBlu);
         setContentView(R.layout.activity_login);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
