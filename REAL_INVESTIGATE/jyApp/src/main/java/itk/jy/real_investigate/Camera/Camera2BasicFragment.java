@@ -93,6 +93,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import itk.jy.real_investigate.CameraActivity;
+import itk.jy.real_investigate.Preference.PreferenceManager;
 import itk.jy.real_investigate.R;
 
 /* ** AutoFitTextureView로 화면을 조정, 보여주고 사진 찍음 */
@@ -279,16 +280,14 @@ public class Camera2BasicFragment extends Fragment
 
         @Override
         public void onImageAvailable(ImageReader reader) {
-            //근경 원경 확인
-            String srcAB;
-            if(VIEW_WHAT == 0) { srcAB = "A"; }
-            else { srcAB = "B"; }
+
 
             int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
-            ((CameraActivity)getActivity()).zzicCount(VIEW_WHAT);
-            int pictureNum = ((CameraActivity)getActivity()).getzzic(VIEW_WHAT);
-            String fileName = ((CameraActivity)getActivity()).getAddressString()+"_"+srcAB+"_"+pictureNum;
-            String filePath = "MyCameraView/"+fileName+".jpg";
+            ((CameraActivity)getActivity()).zzicCount();
+            int pictureNum = ((CameraActivity)getActivity()).getzzic();
+            String fileName = ((CameraActivity)getActivity()).getAddressString()+"_"+pictureNum;
+            String frontPath = PreferenceManager.getString(getContext(),"sidoCode")+"/";
+            String filePath = frontPath+fileName+".jpg";
             mFile = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), filePath);
 
             //사진내용
@@ -303,7 +302,7 @@ public class Camera2BasicFragment extends Fragment
 
 
             if(LIST_WHAT == LIST_SAVE) {
-                ((CameraActivity) getActivity()).putFileName("picture" + pictureNum+srcAB, mFile.toString());
+                ((CameraActivity) getActivity()).putFileName("picture" + pictureNum, mFile.toString());
             }
             mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
         }
@@ -552,7 +551,8 @@ public class Camera2BasicFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        File pictureStorage = new File( Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), "MyCameraView/");
+        String sidoCode = PreferenceManager.getString(getContext(),"sidoCode")+"/";
+        File pictureStorage = new File( Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), sidoCode);
         // 만약 장소가 존재하지 않는다면 폴더를 새롭게 만든다.
         if (!pictureStorage.exists()) {
             boolean dirCreate = pictureStorage.mkdirs();
@@ -1032,13 +1032,10 @@ public class Camera2BasicFragment extends Fragment
             }
             //Info 버튼 선택 시
             case R.id.info: {
-                Activity activity = getActivity();
-                if (null != activity) {
-                    new AlertDialog.Builder(activity)
-                            .setMessage(R.string.intro_message)
-                            .setPositiveButton(android.R.string.ok, null)
-                            .show();
-                }
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                getActivity().startActivity(Intent.createChooser(intent,"Get Album"));
                 break;
             }
             //근경 원경 변경 시

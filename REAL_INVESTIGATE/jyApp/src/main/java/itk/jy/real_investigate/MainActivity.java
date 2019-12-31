@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import itk.jy.real_investigate.Internet.InternetManager;
+import itk.jy.real_investigate.Preference.PreferenceManager;
 import itk.jy.real_investigate.library.SlidingUpPanelLayout;
 import itk.jy.real_investigate.library.SlidingUpPanelLayout.PanelState;
 import itk.jy.real_investigate.Fragment.FragmentContent;
@@ -219,7 +220,8 @@ public class MainActivity extends AppCompatActivity {
             sMediaProjection = mProjectionManager.getMediaProjection(resultCode, data);
             //폴더 생성 및 확인
             if (sMediaProjection != null) {
-                File pictureStorage = new File( Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), "MyCameraView/");
+                String sidoCode = PreferenceManager.getString(getApplicationContext(),"sidoCode")+"/";
+                File pictureStorage = new File( Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), sidoCode);
                 // 만약 장소가 존재하지 않는다면 폴더를 새롭게 만든다.
                 if (!pictureStorage.exists()) {
                     boolean dirCreate = pictureStorage.mkdirs();
@@ -227,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"오류 - 폴더 생성 실패", Toast.LENGTH_SHORT).show();
                     }
                 }
-                String STORE_DIRECTORY = "MyCameraView/"+FILENAME+".png";
+                String STORE_DIRECTORY = sidoCode+FILENAME+"_screenShot.png";
                 storeDirectory = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), STORE_DIRECTORY);
                 // display metrics
                 DisplayMetrics metrics = getResources().getDisplayMetrics();

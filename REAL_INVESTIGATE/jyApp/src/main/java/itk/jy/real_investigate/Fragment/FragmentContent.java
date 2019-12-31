@@ -72,8 +72,6 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
     private ProgressBar ftpGrassBar;
     private final int takePicture_OK = 1110;
     private final int selectPicture_OK = 1112;
-    private int LIST_DRAG_MOTION = 0;
-    private int isMoveAction = 0;
     @Override
     public void onItemSelected(View v, int position) {
         String filePath = mArrayList.get(position).getFilePath();
@@ -127,7 +125,20 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
                 if (isExistCameraApplication()) {
                     Intent cameraApp = new Intent(getActivity().getApplication(), CameraActivity.class);
                     //주소 카메라 Activity로 보내기
-                    cameraApp.putExtra("pnuName",addressText.getText().toString());
+                    cameraApp.putExtra("addrName",addressText.getText().toString());
+                    int picCount = 0;
+                    if(!mArrayList.isEmpty()) {
+                        int listCount = mArrayList.size()-1;
+                        String fName = mArrayList.get(listCount).getFileName();
+                        fName = fName.substring(fName.length()-5);
+                        fName = fName.substring(0, 1);
+                        try {
+                            picCount = Integer.parseInt(fName);
+                        }catch (Exception e) {
+                            picCount = 0;
+                        }
+                    }
+                    cameraApp.putExtra("picCount",picCount);
 
                     getActivity().startActivityForResult(cameraApp,takePicture_OK);
                     getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadeout);
@@ -420,8 +431,8 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
                     String imageName = extras.get(_key).toString();
                     int Idx = imageName.lastIndexOf("/");
                     imageName = imageName.substring(Idx+1);
-                    Idx = imageName.lastIndexOf(".");
-                    imageName = imageName.substring(0,Idx);
+                    //Idx = imageName.lastIndexOf(".");
+                    //imageName = imageName.substring(0,Idx);
                     String imagePath = extras.get(_key).toString();
                     ListGetSet imageData = new ListGetSet(imageName, imagePath);
                     mArrayList.add(imageData);

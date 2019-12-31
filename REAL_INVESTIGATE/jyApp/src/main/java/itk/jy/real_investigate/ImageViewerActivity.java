@@ -22,11 +22,13 @@ public class ImageViewerActivity extends AppCompatActivity {
         File imgFile = new File(filePath);
         if(imgFile.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            double myWidth = myBitmap.getWidth();
+            double myHeight = myBitmap.getHeight();
             Matrix mtx = new Matrix();
-            mtx.postRotate(90);
+            if(myWidth > myHeight) mtx.postRotate(90);
+            else mtx.postRotate(0);
             Bitmap rtBitmap = Bitmap.createBitmap(myBitmap,0,0,myBitmap.getWidth(),myBitmap.getHeight(),mtx,true);
             ImageView myImage = findViewById(R.id.picture_view);
-
             myImage.setImageBitmap(rtBitmap);
         }
     }

@@ -31,8 +31,7 @@ import itk.jy.real_investigate.Permission.PermissionRequester;
 /* ** 화면을 풀 스크린으로 변경?*/
 public class CameraActivity extends AppCompatActivity {
     private static String addressString;
-    private static int near_zzic;
-    private static int far_zzic;
+    private static int zzic;
     private Intent addressIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,8 @@ public class CameraActivity extends AppCompatActivity {
 
         //FragmentContent에서 보낸 주소 데이터 받기
         addressIntent = getIntent();
-        addressString = addressIntent.getStringExtra("pnuName");
+        addressString = addressIntent.getStringExtra("addrName");
+        zzic = addressIntent.getIntExtra("picCount",0);
 
         //camera surface view 등록
         if (null == savedInstanceState) {
@@ -70,23 +70,20 @@ public class CameraActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        getIntent().removeExtra("pnuName");
+        getIntent().removeExtra("addrName");
+        getIntent().removeExtra("picCount");
         //찍은 사진 목록을 FragmentContent로 전송
         setResult(1213,addressIntent);
-        near_zzic = 0; far_zzic = 0;
+        zzic = 0;
 
         super.onBackPressed();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
-    public void zzicCount(int zzicWhat) {
-        if(zzicWhat == 0) { ++near_zzic; }
-        else if(zzicWhat == 1) { ++far_zzic; }
+    public void zzicCount() {
+        ++zzic;
     }
-    public int getzzic(int zzicWhat) {
-        int zzic = 0;
-        if (zzicWhat == 0) {zzic = near_zzic; }
-        else if (zzicWhat == 1) { zzic = far_zzic; }
+    public int getzzic() {
         return zzic;
     }
     public String getAddressString() { return addressString; }

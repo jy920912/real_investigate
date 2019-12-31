@@ -80,7 +80,7 @@
             android:background="@drawable/round_button_trans"
             />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/info"
             android:contentDescription="@string/description_info"
             style="@android:style/Widget.Material.Light.Button.Borderless"
