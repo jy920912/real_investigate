@@ -1104,7 +1104,7 @@ public class ViewDragHelper {
             mVelocityTracker = VelocityTracker.obtain();
         }
         mVelocityTracker.addMovement(ev);
-
+        //slide panel 액션 부분
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
                 final float x = ev.getX();

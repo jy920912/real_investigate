@@ -23,21 +23,28 @@ public class MoreContentActivity extends AppCompatActivity {
         TextView jigaText = findViewById(R.id.ji_ga);
         TextView areaText = findViewById(R.id.area);
         ImageButton backB = findViewById(R.id.more_backButton);
+
         backB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
+
         DecimalFormat jigaFormat = new DecimalFormat("###,###");
         DecimalFormat areaFormat = new DecimalFormat("###,###.#");
+
+        //지가 포맷 변경
         int i_jiga;
         try {
             i_jiga = Integer.parseInt(PreferenceManager.getString(getApplicationContext(), "jiga"));
         }catch(Exception e) {
             i_jiga = 0;
         }
+
         String jiga = jigaFormat.format(i_jiga) +" (원)";
+
+        //면적 포맷 변경
         double i_area;
         try {
             i_area = Double.parseDouble(PreferenceManager.getString(getApplicationContext(), "area"));
@@ -45,18 +52,12 @@ public class MoreContentActivity extends AppCompatActivity {
             i_area = 0;
         }
         String area = areaFormat.format(i_area)+" (㎡)";
+
         addressText.setText(PreferenceManager.getString(getApplicationContext(),"address"));
         pnuText.setText(PreferenceManager.getString(getApplicationContext(),"pnu"));
         jimokText.setText(PreferenceManager.getString(getApplicationContext(),"jimok"));
         jigaText.setText(jiga);
         areaText.setText(area);
-    }
-
-    @Override
-    public void onBackPressed() {
-        //MainActivity 로 돌아감
-
-        super.onBackPressed();
     }
 
 }

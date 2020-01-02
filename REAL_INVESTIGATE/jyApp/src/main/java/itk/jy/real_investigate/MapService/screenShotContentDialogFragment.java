@@ -25,7 +25,9 @@ public class screenShotContentDialogFragment extends DialogFragment {
     public static final String DIALOGNAME = "dialog_event";
     private static final String[] ListMenu = {"정보보기","스크린샷"};
     private static String addressT;
+
     public screenShotContentDialogFragment() {}
+
     public static screenShotContentDialogFragment getInstance(String address) {
         addressT = address;
         screenShotContentDialogFragment scSCDialog = new screenShotContentDialogFragment();
@@ -40,32 +42,36 @@ public class screenShotContentDialogFragment extends DialogFragment {
 
         Dialog dialog = getDialog();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         final CheckBox spotTFBox = v.findViewById(R.id.spot_check);
         TextView TV = v.findViewById(R.id.jibun_text);
         TV.setText(addressT);
         ListView LV = v.findViewById(R.id.dialog_listview);
+
         ArrayAdapter adpater = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,ListMenu);
         LV.setAdapter(adpater);
+
+        //dialog 선택
         LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 dismiss();
+                //정보보기 선택 시
                 if(position == 0){
                     //slideUp
                     SlidingUpPanelLayout mLayout = getActivity().findViewById(R.id.sliding_layout);
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
                 }
+                //스크린샷 선택 시
                 else if(position == 1) {
                     boolean tftf;
                     if(spotTFBox.isChecked()) tftf = true;
                     else tftf = false;
+                    //스크린샷 시작
                     ((MainActivity)getActivity()).startProjection(addressT, tftf);
                 }
-
-
             }
         });
-        //dialog.setCanceledOnTouchOutside(false);
         return v;
     }
 }

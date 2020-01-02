@@ -10,20 +10,18 @@ import androidx.annotation.Nullable;
 
 import itk.jy.real_investigate.R;
 
-
+//대상지 목록 리스트뷰
 public class listViewer extends LinearLayout {
 
     TextView textView;
     TextView textView2;
     public listViewer(Context context) {
         super(context);
-
         init(context);
     }
 
     public listViewer(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
         init(context);
     }
 

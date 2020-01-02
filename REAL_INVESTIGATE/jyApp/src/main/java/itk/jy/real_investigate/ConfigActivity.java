@@ -32,7 +32,7 @@ public class ConfigActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //MainActicity로 돌아감
+        //MainActivity 로 돌아감
         Intent mainIntent = new Intent(getApplication(), MainActivity.class);
         startActivity(mainIntent);
         overridePendingTransition(R.anim.leftin,R.anim.leftout);

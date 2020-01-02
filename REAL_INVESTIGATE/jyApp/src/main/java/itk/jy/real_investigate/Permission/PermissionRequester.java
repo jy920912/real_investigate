@@ -55,9 +55,7 @@ public class PermissionRequester {
                                     * 뒤에 들어가는 파라미터(requestCode)는 onRequestPermissionsResult() 에서 권한 취득 결과에서 사용된다.
                                     * startActiviryForResult의 Request Code와 유사함.
                                     */
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        context.requestPermissions(new String[]{permission}, requestCode);
-                                    }
+                                    context.requestPermissions(new String[]{permission}, requestCode);
                                 }
                             })
                             .setNegativeButton(builder.getNegativeButtonName(), new DialogInterface.OnClickListener() {
@@ -100,32 +98,41 @@ public class PermissionRequester {
         private String message = "기능의 사용을 위해 권한이 필요합니다.";
         private String positiveButtonName = "네";
         private String negativeButtonName = "아니요";
+
         public String getTitle() {
             return title;
         }
+
         public Builder setTitle(String title) {
             this.title = title; return this;
         }
+
         public String getMessage() {
             return message;
         }
+
         public Builder setMessage(String message) {
             this.message = message; return this;
         }
+
         public String getPositiveButtonName() {
             return positiveButtonName;
         }
+
         public Builder setPositiveButtonName(String positiveButtonName) {
             this.positiveButtonName = positiveButtonName;
             return this;
         }
+
         public String getNegativeButtonName() {
             return negativeButtonName;
         }
+
         public Builder setNegativeButtonName(String negativeButtonName) {
             this.negativeButtonName = negativeButtonName;
             return this;
         }
+
         public PermissionRequester create() {
             this.requester.setBuilder(this);
             return this.requester;

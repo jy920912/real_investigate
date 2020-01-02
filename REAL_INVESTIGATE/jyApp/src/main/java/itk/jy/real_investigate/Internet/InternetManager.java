@@ -15,7 +15,7 @@ public class InternetManager {
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         if(networkInfo != null){
             int type = networkInfo.getType();
-            if(type == ConnectivityManager.TYPE_MOBILE){//쓰리지나 LTE로 연결된것(모바일을 뜻한다.)
+            if(type == ConnectivityManager.TYPE_MOBILE){//쓰리지나 LTE로 연결된것(모바일)
                 return TYPE_MOBILE;
             }else if(type == ConnectivityManager.TYPE_WIFI){//와이파이 연결된것
                 return TYPE_WIFI;

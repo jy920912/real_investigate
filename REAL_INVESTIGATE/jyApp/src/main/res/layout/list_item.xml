@@ -40,10 +40,12 @@
         android:orientation="vertical"
         android:layout_weight="2">
         <CheckBox
+            android:id="@+id/checkboxA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="근경"/>
         <CheckBox
+            android:id="@+id/checkboxB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="원경"/>

@@ -3,10 +3,12 @@ package itk.jy.real_investigate.PathList;
 public class ListGetSet {
     private String FileName;
     private String FilePath;
+    private int AorB;
 
-    public ListGetSet(String FN, String FP) {
+    public ListGetSet(String FN, String FP, int AB) {
         FileName = FN;
         FilePath = FP;
+        AorB = AB;
     }
 
     public String getFileName() {
@@ -24,6 +26,10 @@ public class ListGetSet {
     public void setFilePath(String filePath) {
         FilePath = filePath;
     }
+
+    public int getAorB() {return AorB;}
+
+    public void setAorB(int AB) {AorB = AB;}
 
 
 }
