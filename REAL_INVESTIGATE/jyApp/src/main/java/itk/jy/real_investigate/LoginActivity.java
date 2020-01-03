@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -28,12 +30,14 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import itk.jy.real_investigate.Internet.InternetManager;
+import itk.jy.real_investigate.PicList.listItem;
+import itk.jy.real_investigate.PicList.listViewer;
 import itk.jy.real_investigate.Preference.PreferenceManager;
 
 import static android.content.ContentValues.TAG;
@@ -46,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     Spinner sidoSpinner;
     String id; String pw;
     ArrayList<String> permissions = new ArrayList<>();
+    int whatwhat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,13 +73,16 @@ public class LoginActivity extends AppCompatActivity {
         }
         //시도코드 콤보박스
         sidoSpinner = findViewById(R.id.sidocode);
-        ArrayAdapter sidoAdapter = ArrayAdapter.createFromResource(this, R.array.sidocode_list,
+        /*ArrayAdapter sidoAdapter = ArrayAdapter.createFromResource(this, R.array.sidocode_list,
                 android.R.layout.simple_spinner_dropdown_item);
         sidoSpinner.setAdapter(sidoAdapter);
 
+        //저번에 선택했던 시군 position 불러오기
         int selSido = PreferenceManager.getInt(getApplicationContext(),"sidoNum");
-        if(selSido != -1) sidoSpinner.setSelection(selSido);
+        if(selSido != -1) sidoSpinner.setSelection(selSido);*/
 
+        URLConnector task = new URLConnector();
+        task.execute("", "");
         Button loginButton  = findViewById(R.id.sign_in);
         Button exitButton = findViewById(R.id.exit);
         loginText = findViewById(R.id.app_id);
@@ -100,14 +108,19 @@ public class LoginActivity extends AppCompatActivity {
                 byte[] data = null;
                 id = loginText.getText().toString();
                 try {
-                    data = id.getBytes("UTF-8");
-                }catch(UnsupportedEncodingException uee){uee.getStackTrace();}
+                    data = id.getBytes(StandardCharsets.UTF_8);
+                }catch(Exception e){
+                    e.getStackTrace();
+                }
                 String encId = Base64.encodeToString(data, Base64.NO_WRAP);
                 pw = passwordText.getText().toString();
                 try {
-                    data = pw.getBytes("UTF-8");
-                }catch(UnsupportedEncodingException uee){uee.getStackTrace();}
+                    data = pw.getBytes(StandardCharsets.UTF_8);
+                }catch(Exception e){
+                    e.getStackTrace();
+                }
                 String encPw = Base64.encodeToString(data, Base64.NO_WRAP);
+                whatwhat = 1;
                 URLConnector task = new URLConnector();
                 task.execute(encId, encPw);
             }
@@ -155,11 +168,9 @@ public class LoginActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, reqPermissionArray, 0);
         }
 
-        //인터넷 연결 여부 확인
-        internetCon();
-
     }
-    public void internetCon() {
+
+    public Boolean internetCon() {
         int InternetConnection = InternetManager.getConnectivityStatus(this);
         if(InternetConnection == 3) {
             // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
@@ -175,7 +186,9 @@ public class LoginActivity extends AppCompatActivity {
             alBuilder.setTitle("인터넷 연결상태 확인");
             alBuilder.setCancelable(false);
             alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
+            return false;
         }
+        return true;
     }
     @Override
     public void onBackPressed() {
@@ -201,59 +214,122 @@ public class LoginActivity extends AppCompatActivity {
         alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
 
     }
+
+    //Adapter
+    class listAdapter extends BaseAdapter {
+        ArrayList<listItem> items = new ArrayList<listItem>();
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        public void addItem(listItem singerItem){
+            items.add(singerItem);
+        }
+
+        @Override
+        public listItem getItem(int i) {
+            return items.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        //출력 시
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+
+            listViewer lViewer = new listViewer(getApplicationContext());
+            lViewer.setItem(items.get(i));
+
+            if("미완료".equals(items.get(i).getPic())) lViewer.setColorItem(R.color.rrrred);
+            else if("완료".equals(items.get(i).getPic())) lViewer.setColorItem(R.color.bbbblue);
+
+            return lViewer;
+        }
+    }
+
     //아이디 비밀번호 확인 및 mainActivity 이동
     public class URLConnector extends AsyncTask<String, Void, String> {
         String res;
+        boolean conItn;
+        //서버 접근 전
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            internetCon();
+            conItn = internetCon();
         }
 
+        //서버 접근 후
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            if(!conItn) return;
             res = result;
-            if("1".equals(res)) {
-                //시도코드 저장
-                String sidocode = sidoSpinner.getSelectedItem().toString().substring(0,5);
-                PreferenceManager.setInt(getApplication(),"sidoNum",sidoSpinner.getSelectedItemPosition());
-                PreferenceManager.setString(getApplication(),"sidoCode",sidocode);
-                //아이디 저장여부
-                if(loginSave.isChecked()) {
-                    PreferenceManager.setBoolean(getApplication(),"idSaveCheck",true);
-                    PreferenceManager.setString(getApplication(),"idSave", id);
+            if(whatwhat == 1) {
+                if ("0".equals(res)) {
+                    StyleableToast.makeText(getApplication(), "아이디 혹은 비밀번호가 틀립니다.", Toast.LENGTH_LONG, R.style.mytoast).show();
+                }else if ("1".equals(res)) {
+                    //시도코드 저장
+                    String sidocode = sidoSpinner.getSelectedItem().toString().substring(0, 5);
+                    PreferenceManager.setInt(getApplication(), "sidoNum", sidoSpinner.getSelectedItemPosition());
+                    PreferenceManager.setString(getApplication(), "sidoCode", sidocode);
+                    //아이디 저장여부
+                    if (loginSave.isChecked()) {
+                        PreferenceManager.setBoolean(getApplication(), "idSaveCheck", true);
+                        PreferenceManager.setString(getApplication(), "idSave", id);
+                    } else {
+                        PreferenceManager.setBoolean(getApplication(), "idSaveCheck", false);
+                        PreferenceManager.setString(getApplication(), "idSave", "");
+                    }
+                    //MainActivity 이동
+                    StyleableToast.makeText(getApplication(), "로그인되었습니다.", Toast.LENGTH_LONG, R.style.mytoast).show();
+                    Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(mainIntent);
+                    overridePendingTransition(R.anim.fadeinlogin, R.anim.fadeoutlogin);
+                    finish();
                 }
-                else {
-                    PreferenceManager.setBoolean(getApplication(),"idSaveCheck",false);
-                    PreferenceManager.setString(getApplication(),"idSave", "");
-                }
-                //MainActivity 이동
-                StyleableToast.makeText(getApplication(),"로그인되었습니다.",Toast.LENGTH_LONG,R.style.mytoast).show();
-                Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(mainIntent);
-                overridePendingTransition(R.anim.fadeinlogin, R.anim.fadeoutlogin);
-                finish();
             }
-            else {
-                StyleableToast.makeText(getApplication(),"아이디 혹은 비밀번호가 틀립니다.",Toast.LENGTH_LONG,R.style.mytoast).show();
+            else if(whatwhat == 0){
+                ArrayList arrList = new ArrayList<>();
+                String[] splitText = res.split(",");
+                //읍면동 스피너에 입력
+                for(int i=0;i<splitText.length;i= i+2) {
+                    String spinnerString = splitText[i]+"("+splitText[i+1]+")";
+                    arrList.add(spinnerString);
+                }
+                ArrayAdapter arrAdapter= new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,arrList);
+                sidoSpinner.setAdapter(arrAdapter);
+                int selSido = PreferenceManager.getInt(getApplicationContext(),"sidoNum");
+                if(selSido != -1) sidoSpinner.setSelection(selSido);
             }
         }
 
+        //서버 접근
         @Override
         protected String doInBackground(String... params) {
+            if(!conItn) return null;
 
+            String serverURL = "";
+            String postParameters = "";
             String searchKeyword1 = params[0];
             String searchKeyword2 = params[1];
-
-            String serverURL = "http://115.95.67.133:5088/real_investigate/jsp/idpw.jsp";
-            String postParameters = "id=" + searchKeyword1 + "&pw=" + searchKeyword2;
+            if(whatwhat == 1) {
+                serverURL = "http://115.95.67.133:5088/real_investigate/jsp/idpw.jsp";
+                postParameters = "id=" + searchKeyword1 + "&pw=" + searchKeyword2;
+            }
+            else if(whatwhat == 0) {
+                serverURL = "http://115.95.67.133:5088/real_investigate/jsp/sidocode.jsp";
+            }
 
             try {
 
+                //서버 Connection
                 URL url = new URL(serverURL);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
 
                 httpURLConnection.setReadTimeout(5000);
                 httpURLConnection.setConnectTimeout(5000);
@@ -262,12 +338,11 @@ public class LoginActivity extends AppCompatActivity {
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.connect();
 
-
+                //데이터 가져오기
                 OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.write(postParameters.getBytes(StandardCharsets.UTF_8));
                 outputStream.flush();
                 outputStream.close();
-
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
                 Log.d(TAG, "response code - " + responseStatusCode);
@@ -280,8 +355,7 @@ public class LoginActivity extends AppCompatActivity {
                     inputStream = httpURLConnection.getErrorStream();
                 }
 
-
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
                 StringBuilder sb = new StringBuilder();
@@ -291,21 +365,16 @@ public class LoginActivity extends AppCompatActivity {
                     sb.append(line);
                 }
 
-
                 bufferedReader.close();
 
+                //일치 시 1, 불일치 시 0;
                 res = sb.toString().trim();
                 return sb.toString().trim();
 
-
             } catch (Exception e) {
-
                 Log.d(TAG, "InsertData: Error ", e);
-
-
                 return null;
             }
-
         }
     }
 }

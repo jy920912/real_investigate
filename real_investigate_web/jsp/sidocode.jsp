@@ -2,15 +2,16 @@
 <%@ include file ="mysql_conn.jsp" %>
 
 <%
-  String s_pnu  = request.getParameter("PNU");
-  String s_sido = request.getParameter("SIDO");
+  /*
+   * 실태조사 할 시도 불러오기
+   */
+
   try{
-    String s_Query = "select * from real_investigate_"+s_sido+".tb_pictureyesno where PNU = ?";
+    String s_Query = "select * from real_investigate_config.tb_ablesido";
     pstmt = conn.prepareStatement(s_Query);
-    pstmt.setString(1, s_pnu);
     rs = pstmt.executeQuery();
     while(rs.next()){
-      out.print(rs.getString("COORDX")+"|"+rs.getString("COORDY")+"|");
+      out.println(rs.getString("sido_cd")+","+rs.getString("sido_nm")+",");
     }
   }catch(Exception e){
     out.print("ERROR");

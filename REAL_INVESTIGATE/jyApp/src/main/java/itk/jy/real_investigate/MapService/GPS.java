@@ -134,7 +134,7 @@ public class GPS extends Service implements LocationListener {
         //GPS좌표 변경 시 행동
         double lon = location.getLongitude();
         double lat = location.getLatitude();
-        ((MainActivity)mContext).func_output_lonlat(lon,lat);
+        ((MainActivity)mContext).func_output_lon_lat(lon,lat);
     }
 
     @Override

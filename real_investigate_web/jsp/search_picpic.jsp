@@ -2,6 +2,9 @@
 <%@ include file ="mysql_conn.jsp" %>
 
 <%
+  /*
+   * 해당 시군에 있는 대상지 전체 select
+   */
   String s_sido = request.getParameter("SIDO");
 
   try{
@@ -13,7 +16,7 @@
                 +rs.getString("DRON_OX")+"|"+rs.getString("COORDX")+"|"+rs.getString("COORDY")+"|");
     }
   }catch(Exception e){
-    out.print(e);
+    out.print("ERROR");
   }finally{
     if(rs != null) rs.close();
     if(pstmt != null) pstmt.close();

@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -72,15 +73,7 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
     private ProgressBar ftpGrassBar;
     private final int takePicture_OK = 1110;
     private final int selectPicture_OK = 1112;
-    @Override
-    public void onItemSelected(View v, int position) {
-        String filePath = mArrayList.get(position).getFilePath();
-        Intent imageApp = new Intent(getActivity().getApplication(), ImageViewerActivity.class);
 
-        imageApp.putExtra("filePath", filePath);
-
-        getActivity().startActivity(imageApp);
-    }
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,6 +98,7 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
         imageListView.setLayoutManager(mLinearLayoutManager);
 
+        //전송 리스트 생성
         mArrayList = new ArrayList<>();
         mAdapter = new CustomAdapter(mArrayList, this);
         imageListView.setAdapter(mAdapter);
@@ -125,10 +119,11 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
                 if (isExistCameraApplication()) {
                     Intent cameraApp = new Intent(getActivity().getApplication(), CameraActivity.class);
                     //주소 카메라 Activity로 보내기
-                    cameraApp.putExtra("addrName",addressText.getText().toString());
+                    cameraApp.putExtra("address_Name",addressText.getText().toString());
                     int picCount = 0;
                     if(!mArrayList.isEmpty()) {
                         int listCount = mArrayList.size()-1;
+                        //사진 번호 추출
                         String fName = mArrayList.get(listCount).getFileName();
                         fName = fName.substring(fName.length()-5);
                         fName = fName.substring(0, 1);
@@ -176,7 +171,7 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
         sendFileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               final ftpSendDialogFragment frfr = ftpSendDialogFragment.getInstance();
+                final ftpSendDialogFragment frfr = ftpSendDialogFragment.getInstance();
                 frfr.show(getFragmentManager(),frfr.DIALOGNAME);
                 sendFileButton.setEnabled(false);
                 sendFileButtonEnable = false;
@@ -227,17 +222,35 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
                             });
                             return;
                         }
+
+                        // change or make directory
+                        String sidoCode = PreferenceManager.getString(getContext(),"sidoCode");
+                        boolean mkDirOx = ftpManager.ftpMakeDirectory(sidoCode);
+                        boolean chDirOx = ftpManager.ftpChangeDir(sidoCode);
+                        currentPath = ftpManager.ftpGetDirectory();
                         ftpGrassBar.setProgress(0);
                         frfr.setMax(imageCount);
                         frfr.setProgress(0);
                         ftpGrassBar.setMax(imageCount);
                         for(int i = 0; i<imageCount; i++) {
                             String upFilePath = mArrayList.get(i).getFilePath();
-                            String FileName = mArrayList.get(i).getFileName()+".jpg";
-                            Map<String, String> fff = null;
+                            String FileName = mArrayList.get(i).getFileName();
+                            int AorB = mArrayList.get(i).getAorB();
+                            int frontIdx = FileName.lastIndexOf("_");
+
+                            if(AorB == 0) {
+                                String frontName = FileName.substring(0, frontIdx);
+                                String lastName = FileName.substring(frontIdx);
+                                FileName = frontName+"_A"+lastName;
+                            }
+                            else if(AorB == 1) {
+                                String frontName = FileName.substring(0, frontIdx);
+                                String lastName = FileName.substring(frontIdx);
+                                FileName = frontName+"_B"+lastName;
+                            }
                             frfr.setFilePath(upFilePath);
                             //ftp서버에 파일 업로드
-                            boolean upres = ftpManager.ftpUploadFile(upFilePath, FileName, "/");
+                            boolean upres = ftpManager.ftpUploadFile(upFilePath, FileName, currentPath);
                             boolean ftpDown = frfr.getDismiss();
                             if(ftpDown) {
                                 handler.post(new Runnable() {
@@ -260,6 +273,9 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
                                 //전송 시 파일 삭제
                                 File f = new File(upFilePath);
                                 f.delete();
+                                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                                mediaScanIntent.setData(Uri.fromFile(f));
+                                getActivity().sendBroadcast(mediaScanIntent);
                             }
                             else { //전송 실패 시
                             }
@@ -386,6 +402,7 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
         return rootView;
     }
 
+    //swipe list content
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
         @Override
@@ -393,10 +410,20 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
             return true;
         }
 
+        //swipe 해서 리스트에서 제거 및 파일 제거
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             // 삭제되는 아이템의 포지션을 가져온다
             final int position = viewHolder.getAdapterPosition();
+            String filePath = mArrayList.get(position).getFilePath();
+
+            //파일 삭제
+            File f = new File(filePath);
+            f.delete();
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            mediaScanIntent.setData(Uri.fromFile(f));
+            getActivity().sendBroadcast(mediaScanIntent);
+
             // 데이터의 해당 포지션을 삭제한다
             mArrayList.remove(position);
             // 어댑터에게 알린다
@@ -426,25 +453,31 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
                         func_switchAndMapReload();
                     }
                 });
-
+                //가져온 리스트 및 근/원경 추출
                 for(String _key:extras.keySet()) {
-                    String imageName = extras.get(_key).toString();
-                    int Idx = imageName.lastIndexOf("/");
-                    imageName = imageName.substring(Idx+1);
-                    //Idx = imageName.lastIndexOf(".");
-                    //imageName = imageName.substring(0,Idx);
-                    String imagePath = extras.get(_key).toString();
-                    ListGetSet imageData = new ListGetSet(imageName, imagePath);
+                    String fullPath = extras.get(_key).toString();
+                    int Idx = fullPath.lastIndexOf("/");
+                    String imageName = fullPath.substring(Idx + 1);
+                    Idx = fullPath.lastIndexOf("|");
+                    String imagePath = fullPath.substring(Idx+1);
+                    String AB = fullPath.substring(0,1);
+                    int AorB;
+                    try {
+                        AorB = Integer.parseInt(AB.substring(0, 1));
+                    }catch (Exception e) {
+                        AorB = 0;
+                    }
+
+                    ListGetSet imageData = new ListGetSet(imageName, imagePath, AorB);
                     mArrayList.add(imageData);
                 }
                 mAdapter.notifyDataSetChanged();
             }
         }
+        //선택한 사진들을 리스트에 추가
         else if(requestCode == selectPicture_OK && resultCode == Activity.RESULT_OK) {
             if( data != null) {
-                /*if(!imageList.isEmpty()) {
-                    imageList.clear();
-                }*/
+                //mArrayList.clear();
 
                 if(data.getClipData() == null) {
                     StyleableToast.makeText(mContext, "다중선택이 불가한 어플리케이션입니다.", Toast.LENGTH_LONG, R.style.mytoast).show();
@@ -459,7 +492,6 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
                             func_switchAndMapReload();
                         }
                     });
-                    int itemCount = imageListView.getAdapter().getItemCount();
                     ClipData clipData = data.getClipData();
                     if(clipData.getItemCount() > 9) {
                         StyleableToast.makeText(mContext, "사진은 9장까지 선택 가능합니다.", Toast.LENGTH_LONG, R.style.mytoast).show();
@@ -468,8 +500,9 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
                         for(int i=0; i<clipData.getItemCount() ; i++) {
                             Uri uri = clipData.getItemAt(i).getUri();
                             String path = getRealPath(uri);
-                            String imageName = addressText.getText().toString() + "_"+ (itemCount+i+1);
-                            ListGetSet imageData = new ListGetSet(imageName, path);
+                            int lastIndex = path.lastIndexOf("/");
+                            String imageName = path.substring(lastIndex+1);
+                            ListGetSet imageData = new ListGetSet(imageName, path, -1);
                             mArrayList.add(imageData);
                         }
                         mAdapter.notifyDataSetChanged();
@@ -488,6 +521,7 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
         return Path;
     }
 
+    //열 수 있는 카메라 개수 확인
     private boolean isExistCameraApplication() {
         PackageManager packageManager = getActivity().getPackageManager();
         //MyCameraView Application
@@ -497,7 +531,7 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
         // 카메라 App이 적어도 한개 이상 있는지 리턴
         return cameraApps.size() > 0;
     }
-
+    //촬영 상태 변경 시 맵 refresh
     private void func_switchAndMapReload() {
         double lon = 0;
         double lat = 0;
@@ -515,5 +549,24 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
                 ((MainActivity)getActivity()).onOff[0] + "','" + ((MainActivity)getActivity()).onOff[1] + "','" + ((MainActivity)getActivity()).onOff[2] +"')");
         webView.loadUrl("http://115.95.67.133:5088/real_investigate/main.html?" +
                 "lon="+lon+"&lat="+lat+"&sido="+sido+"&map="+selMap+"&jjk="+selJjk+"&jbn="+selJbn);
+    }
+
+    //전송 리스트 선택 시
+    @Override
+    public void onItemSelected(View v, int position) {
+        String filePath = mArrayList.get(position).getFilePath();
+        Intent imageApp = new Intent(getActivity().getApplication(), ImageViewerActivity.class);
+
+        imageApp.putExtra("filePath", filePath);
+
+        getActivity().startActivity(imageApp);
+    }
+    //MainActivity 에서 mArrayList 가져가기
+    public ArrayList<ListGetSet> getArrayList() {
+        return mArrayList;
+    }
+    //MainActivity 에서 mAdapter 가져가기
+    public CustomAdapter getAdapter() {
+        return mAdapter;
     }
 }

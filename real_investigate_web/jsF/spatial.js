@@ -1,6 +1,7 @@
+//GIS서버 wms 주소
 var wmsServer = 'http://115.95.67.133:5088/geoserver/SPATIAL_'+sidoCode+'/wms';
 
-
+//지번 레이어
 var JIBUN_Source = new ol.source.TileWMS({
   url:wmsServer,
   params: {VERSION: '1.3.0',LAYERS: 'SPATIAL_'+sidoCode+':'+sidoCode+'_JIBUN'},
@@ -16,6 +17,8 @@ var JIBUN_Layer = new ol.layer.Tile({
   type : 'WMS',
   visible : true,
 });
+
+//지번 라벨
 var JIBUN_LSource = new ol.source.TileWMS({
   url: wmsServer, //geoserver wms
   params: {VERSION: '1.3.0',LAYERS: 'SPATIAL_'+sidoCode+':'+sidoCode+'_JIBUN_LABEL'},
@@ -32,6 +35,24 @@ var JIBUN_Label = new ol.layer.Tile({
   visible : true,
 });
 
+//도로 레이어
+var ROAD_Source = new ol.source.TileWMS({
+  url:wmsServer,
+  params: {VERSION: '1.3.0',LAYERS: 'SPATIAL_'+sidoCode+':'+sidoCode+'_ROAD'},
+  serverType: 'geoserver',
+  crossOrigin: 'anonymous'
+});
+var ROAD_Layer = new ol.layer.Tile({
+  source : ROAD_Source,
+  minResolution: 0,
+  maxResolution: 64,
+  layerName : 'SPATIAL_'+sidoCode+':'+sidoCode+'_ROAD',
+  layerCategory : 'WMS',
+  type : 'WMS',
+  visible : true,
+});
+
+//읍면동 레이어
 var UMD_Source = new ol.source.TileWMS({
   url:wmsServer,
   params: {VERSION: '1.3.0',LAYERS: 'SPATIAL_'+sidoCode+':'+sidoCode+'_UMD'},
@@ -46,6 +67,7 @@ var UMD_Layer = new ol.layer.Tile({
   visible : true,
 });
 
+//리 레이어
 var RI_Source = new ol.source.TileWMS({
   url:wmsServer,
   params: {VERSION: '1.3.0',LAYERS: 'SPATIAL_'+sidoCode+':'+sidoCode+'_RI'},

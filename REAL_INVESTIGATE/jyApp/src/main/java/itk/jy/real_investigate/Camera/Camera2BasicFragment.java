@@ -283,8 +283,8 @@ public class Camera2BasicFragment extends Fragment
 
 
             int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
-            ((CameraActivity)getActivity()).zzicCount();
-            int pictureNum = ((CameraActivity)getActivity()).getzzic();
+            ((CameraActivity)getActivity()).setCapture_count();
+            int pictureNum = ((CameraActivity)getActivity()).getCapture_count();
             String fileName = ((CameraActivity)getActivity()).getAddressString()+"_"+pictureNum;
             String frontPath = PreferenceManager.getString(getContext(),"sidoCode")+"/";
             String filePath = frontPath+fileName+".jpg";
@@ -302,7 +302,7 @@ public class Camera2BasicFragment extends Fragment
 
 
             if(LIST_WHAT == LIST_SAVE) {
-                ((CameraActivity) getActivity()).putFileName("picture" + pictureNum, mFile.toString());
+                ((CameraActivity) getActivity()).putFileName("picture" +pictureNum, VIEW_WHAT+"|"+mFile.toString());
             }
             mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
         }

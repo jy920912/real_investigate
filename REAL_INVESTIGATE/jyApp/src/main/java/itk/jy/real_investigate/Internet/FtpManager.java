@@ -5,6 +5,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 
 public class FtpManager {
     private FTPClient mFTPClient;
@@ -33,16 +34,13 @@ public class FtpManager {
     }
 
     //ftp 접속해제
-    public boolean ftpDisconnect() {
-        boolean result = false;
+    public void ftpDisconnect() {
         try{
             mFTPClient.logout();
             mFTPClient.disconnect();
-            result = true;
         } catch (Exception e){
             e.getStackTrace();
         }
-        return result;
     }
 
     //ftp 현재 디렉토리
@@ -55,9 +53,16 @@ public class FtpManager {
         }
         return directory;
     }
+    //디렉토리 생성
+    public boolean ftpMakeDirectory(String directory) {
+        try{
+            mFTPClient.makeDirectory(directory);
+            return true;
+        }catch (Exception e) { return false; }
+    }
 
     //디렉토리 변경
-    private boolean ftpChangeDir(String directory) {
+    public boolean ftpChangeDir(String directory) {
         try{
             mFTPClient.changeWorkingDirectory(directory);
             return true;

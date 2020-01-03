@@ -2,6 +2,9 @@
 <%@ include file ="mysql_conn.jsp" %>
 
 <%
+  /*
+   * 선택한 위치의 좌표 출력
+   */
   String s_address = request.getParameter("NAME");
   String s_sido    = request.getParameter("SIDO");
   try{
@@ -13,7 +16,7 @@
       out.print(rs.getString("COORD_X")+","+rs.getString("COORD_Y")+",");
     }
   }catch(Exception e){
-    out.print(e);
+    out.print("ERROR");
   }
   if(rs != null) rs.close();
   if(pstmt != null) pstmt.close();
