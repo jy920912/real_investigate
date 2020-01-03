@@ -256,6 +256,7 @@ public class LoginActivity extends AppCompatActivity {
     public class URLConnector extends AsyncTask<String, Void, String> {
         String res;
         boolean conItn;
+
         //서버 접근 전
         @Override
         protected void onPreExecute() {
