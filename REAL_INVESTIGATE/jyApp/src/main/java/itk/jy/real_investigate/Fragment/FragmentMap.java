@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,16 @@ import androidx.fragment.app.Fragment;
 
 import com.muddzdev.styleabletoast.StyleableToast;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 import itk.jy.real_investigate.MainActivity;
 import itk.jy.real_investigate.MapService.screenShotContentDialogFragment;
+import itk.jy.real_investigate.PathList.CustomAdapter;
+import itk.jy.real_investigate.PathList.ListGetSet;
 import itk.jy.real_investigate.Preference.PreferenceManager;
 import itk.jy.real_investigate.R;
 
@@ -34,7 +43,9 @@ public class FragmentMap extends Fragment {
     public WebView mWebView;
     private ImageButton GPSButton;
     private ImageButton PointButton;
+    private ImageButton JibunButton;
     private static boolean pointTF = false;
+    private static boolean jibunTF = false;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,6 +61,7 @@ public class FragmentMap extends Fragment {
         String selGps = getGpsFix(mContext);
         boolean selJjk = getJijuk(mContext);
         boolean selJbn = getJibun(mContext);
+        jibunTF = selJbn;
 
         //GPS좌표 불러오기
         try {
@@ -145,10 +157,47 @@ public class FragmentMap extends Fragment {
             }
         });
 
+        //초기 지번 출력 상태
+        JibunButton = rootView.findViewById(R.id.JibunVisible);
+        if(jibunTF) {
+            JibunButton.setImageResource(R.drawable.jibun_icon_b);
+            jibunTF = !jibunTF;
+        }
+        else {
+            JibunButton.setImageResource(R.drawable.jibun_icon_g);
+            jibunTF = !jibunTF;
+        }
+        //지번 출력 유무 버튼 클릭 시
+        JibunButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mWebView.loadUrl("javascript:android_receiveMSGJibunVisible("+jibunTF+")");
+                if(jibunTF) {
+                    JibunButton.setImageResource(R.drawable.jibun_icon_b);
+                }
+                else {
+                    JibunButton.setImageResource(R.drawable.jibun_icon_g);
+                }
+                setJibun(mContext, jibunTF);
+                jibunTF = !jibunTF;
+
+            }
+        });
+
         return rootView;
     }
 
-    //웹에서 지적정보 가져오기
+    /*
+     * 웹에서 지적정보 가져오기
+     * address = 지번주소
+     * pnu     = 지번 pnu
+     * cpnf    = 촬영 여부
+     * sdnf    = 전송 여부
+     * drnf    = 드론 촬영 여부
+     * jimok   = 지목
+     * jiga    = 지가
+     * area    = 면적
+     */
     public class AndroidBridge {
         @JavascriptInterface
         public void android_sendMSG(String address, String pnu, String cpnf,String sdnf, String drnf,String jimok, String jiga, String area) {
@@ -174,7 +223,7 @@ public class FragmentMap extends Fragment {
             final CheckBox sendOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.send_switch);
             final CheckBox dronOnOffSw   = ((Activity)FragmentContent.mContext).findViewById(R.id.dr_switch);
 
-            //FragmentConent에 내용 추가
+            //FragmentContent 에 내용 추가
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -195,12 +244,42 @@ public class FragmentMap extends Fragment {
                     } else if ("X".equals(drnfT)) {
                         dronOnOffSw.setChecked(false);
                     }
+                    //FragmentContent mArrayList 가져오기
+                    ArrayList<ListGetSet> mArrayList = ((MainActivity)getActivity()).getArrayList();
+                    mArrayList.clear();
+
+                    //FragmentContent mAdapter 가져오기
+                    CustomAdapter mAdapter = ((MainActivity)getActivity()).getAdapter();
+                    String sidoCode = PreferenceManager.getString(getContext(),"sidoCode");
+
+                    //해당 시군의 폴더 내부 탐색하여 전송리스트에 출력
+                    File pictureStorage = new File( Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), sidoCode);
+                    myFilenameFilter filt = new myFilenameFilter(addressText);
+                    File fList[] = pictureStorage.listFiles(filt);
+                    for(int i=0;i<fList.length;i++) {
+                        ListGetSet imageData = new ListGetSet(fList[i].getName(), fList[i].getPath(), -1);
+                        mArrayList.add(imageData);
+                    }
+                    mAdapter.notifyDataSetChanged();
                 }
             });
+
+            //정보보기, 스크린샷 다이얼로그 열기
             screenShotContentDialogFragment frfr = screenShotContentDialogFragment.getInstance(addressText);
             frfr.show(getFragmentManager(),frfr.DIALOGNAME);
         }
 
+        private class myFilenameFilter implements FilenameFilter {
+            private String s;
+            public myFilenameFilter(String ss) {
+                s = ss;
+            }
+            public boolean accept(File dir, String name) {
+                return (name.indexOf(s) != -1);
+            }
+        }
+
+        //대상지 검색 결과 없는 경우
         @JavascriptInterface
         public void android_sendNoAddress(String address) {
             StyleableToast.makeText(mContext,address+" - 해당 주소를 찾을 수 없습니다.",Toast.LENGTH_LONG,R.style.mytoast).show();

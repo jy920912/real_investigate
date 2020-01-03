@@ -6,7 +6,6 @@
     android:versionName="3.4.0">
 
     <uses-sdk
-        android:targetSdkVersion="29"
         tools:overrideLibrary="android.support.v7.appcompat,android.support.graphics.drawavle"
         />
 
@@ -25,7 +24,7 @@
     <uses-feature android:name="android.hardware.flash"/>
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.location.gps" />
-
+    <!-- android:name=".ExampleApplication" -->
     <application
         android:name=".ExampleApplication"
         android:allowBackup="true"
@@ -47,6 +46,8 @@
         <activity android:name=".CameraActivity"/>
 
         <activity android:name=".ConfigActivity"/>
+
+        <activity android:name=".PicListActivity"/>
 
         <activity android:name=".MoreContentActivity"/>
 

@@ -4,15 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context=".MainActivity">
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/filename_listitem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/picture_name"
         android:textColor="@color/bbbblack"
+        android:textSize="20sp"
         android:layout_marginTop="2dp"/>
 
     <TextView
@@ -23,6 +29,26 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="2dp"
+        android:textSize="17sp"
         android:text="@string/picture_path" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="2">
+        <CheckBox
+            android:id="@+id/checkboxA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="근경"/>
+        <CheckBox
+            android:id="@+id/checkboxB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="원경"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

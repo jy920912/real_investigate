@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class PreferenceManager {
 
-    public static final String PREFERENCES_NAME = "INVESTIGATE_PREFER";
+    private static final String PREFERENCES_NAME = "INVESTIGATE_PREFER";
 
     private static final String DEFAULT_VALUE_STRING = "";
 

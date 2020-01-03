@@ -34,7 +34,7 @@ var rotateinteractions = ol.interaction.defaults({
 
 var map = new ol.Map({
   target: 'spatial_map',
-  layers: [JIBUN_Layer,JIBUN_Label, RI_Layer, UMD_Layer, clickVector, onOffVector],
+  layers: [JIBUN_Layer, RI_Layer, UMD_Layer, clickVector, JIBUN_Label, onOffVector],
   view: view,
   overlays: [marker],
   renderer: 'canvas',

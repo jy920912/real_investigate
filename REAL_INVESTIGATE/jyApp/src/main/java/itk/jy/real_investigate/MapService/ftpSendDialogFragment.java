@@ -24,7 +24,9 @@ public class ftpSendDialogFragment extends DialogFragment {
     private TextView ftp_count;
     private TextView file_path;
     private boolean dismissDialog = false;
+
     public ftpSendDialogFragment() {}
+
     public static ftpSendDialogFragment getInstance() {
         ftpSendDialogFragment scSCDialog = new ftpSendDialogFragment();
         return scSCDialog;
@@ -38,11 +40,13 @@ public class ftpSendDialogFragment extends DialogFragment {
 
         Dialog dialog = getDialog();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         Button cancelB = v.findViewById(R.id.ftp_cancel);
         ftpBar = v.findViewById(R.id.ftpBar);
         file_path = v.findViewById(R.id.file_path);
         ftp_percent = v.findViewById(R.id.ftp_percent);
         ftp_count = v.findViewById(R.id.ftp_count);
+
         cancelB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,10 +54,13 @@ public class ftpSendDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
+
+        //Dialog 박스 밖을 터치해도 취소되지 않게 함
         dialog.setCanceledOnTouchOutside(false);
         return v;
     }
 
+    //프로그래스 바
     public void setProgress(int progress) {
         ftpBar.setProgress(progress);
         final String prgs = Integer.toString(progress);
@@ -67,12 +74,15 @@ public class ftpSendDialogFragment extends DialogFragment {
             }
         });
     }
+
     public void setMax(int max) {
         ftpBar.setMax(max);
     }
+
     public boolean getDismiss() {
         return dismissDialog;
     }
+
     public void setFilePath(String filePath) {
         final String s_filePath = filePath;
         getActivity().runOnUiThread(new Runnable() {

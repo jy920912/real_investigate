@@ -12,4 +12,6 @@
     <color name="capture_on_color">#7777ff</color>
     <color name="wwwwhite">#ffffff</color>
     <color name="bbbblack">#000000</color>
+    <color name="rrrred">#ff0000</color>
+    <color name="bbbblue">#0000ff</color>
 </resources>

@@ -28,9 +28,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import itk.jy.real_investigate.Internet.InternetManager;
@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.AppBaseThemeBlu);
+        //setTheme(R.style.AppBaseThemeBlu);
         setContentView(R.layout.activity_login);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_dropdown_item);
         sidoSpinner.setAdapter(sidoAdapter);
 
+        //저번에 선택했던 시군 position 불러오기
         int selSido = PreferenceManager.getInt(getApplicationContext(),"sidoNum");
         if(selSido != -1) sidoSpinner.setSelection(selSido);
 
@@ -100,13 +101,17 @@ public class LoginActivity extends AppCompatActivity {
                 byte[] data = null;
                 id = loginText.getText().toString();
                 try {
-                    data = id.getBytes("UTF-8");
-                }catch(UnsupportedEncodingException uee){uee.getStackTrace();}
+                    data = id.getBytes(StandardCharsets.UTF_8);
+                }catch(Exception e){
+                    e.getStackTrace();
+                }
                 String encId = Base64.encodeToString(data, Base64.NO_WRAP);
                 pw = passwordText.getText().toString();
                 try {
-                    data = pw.getBytes("UTF-8");
-                }catch(UnsupportedEncodingException uee){uee.getStackTrace();}
+                    data = pw.getBytes(StandardCharsets.UTF_8);
+                }catch(Exception e){
+                    e.getStackTrace();
+                }
                 String encPw = Base64.encodeToString(data, Base64.NO_WRAP);
                 URLConnector task = new URLConnector();
                 task.execute(encId, encPw);
@@ -201,15 +206,19 @@ public class LoginActivity extends AppCompatActivity {
         alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
 
     }
+
     //아이디 비밀번호 확인 및 mainActivity 이동
     public class URLConnector extends AsyncTask<String, Void, String> {
         String res;
+
+        //서버 접근 전
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             internetCon();
         }
 
+        //서버 접근 후
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
@@ -240,6 +249,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
+        //서버 접근
         @Override
         protected String doInBackground(String... params) {
 
@@ -251,9 +261,9 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
 
+                //서버 Connection
                 URL url = new URL(serverURL);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
 
                 httpURLConnection.setReadTimeout(5000);
                 httpURLConnection.setConnectTimeout(5000);
@@ -262,12 +272,11 @@ public class LoginActivity extends AppCompatActivity {
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.connect();
 
-
+                //데이터 가져오기
                 OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.write(postParameters.getBytes(StandardCharsets.UTF_8));
                 outputStream.flush();
                 outputStream.close();
-
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
                 Log.d(TAG, "response code - " + responseStatusCode);
@@ -280,8 +289,7 @@ public class LoginActivity extends AppCompatActivity {
                     inputStream = httpURLConnection.getErrorStream();
                 }
 
-
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
                 StringBuilder sb = new StringBuilder();
@@ -291,21 +299,16 @@ public class LoginActivity extends AppCompatActivity {
                     sb.append(line);
                 }
 
-
                 bufferedReader.close();
 
+                //일치 시 1, 불일치 시 0;
                 res = sb.toString().trim();
                 return sb.toString().trim();
 
-
             } catch (Exception e) {
-
                 Log.d(TAG, "InsertData: Error ", e);
-
-
                 return null;
             }
-
         }
     }
 }
