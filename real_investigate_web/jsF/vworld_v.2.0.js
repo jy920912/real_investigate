@@ -10,6 +10,8 @@ vw.ol3.MapOptions = {
  mapVmap = new vw.ol3.Map("vworld_map",  vw.ol3.MapOptions);
  mapVmap.getView().setCenter(ol.proj.transform([lng, lat], 'EPSG:4326', 'EPSG:3857'));
  mapVmap.getView().setZoom(18);
+
+ //맵 종류에 따른 변경
  switch (mapType) {
    case "PHOTO":
     mapVmap.setBasemapType(vw.ol3.BasemapType.PHOTO);

@@ -206,6 +206,10 @@ public class FragmentMap extends Fragment {
             final String cpnfT = cpnf;
             final String sdnfT = sdnf;
             final String drnfT = drnf;
+            if(pnuText.equals("undefined")) {
+                StyleableToast.makeText(mContext,"선택한 대상지의 정보가 없습니다.", Toast.LENGTH_SHORT,R.style.mytoast).show();
+                return;
+            }
             ((MainActivity)getActivity()).onOff[0] = cpnf;
             ((MainActivity)getActivity()).onOff[1] = sdnf;
             ((MainActivity)getActivity()).onOff[2] = drnf;

@@ -201,19 +201,24 @@ public class PicListActivity extends AppCompatActivity {
             lAdapter.items.clear();
             if(res != null) {
                 if("".equals(res)) {
-                    StyleableToast.makeText(getApplicationContext(), "자료가 없습니다.", Toast.LENGTH_LONG,R.style.mytoast);
+                    StyleableToast.makeText(getApplicationContext(), "자료가 없습니다.", Toast.LENGTH_LONG,R.style.mytoast).show();
                 }
                 //대상지 데이터 가져올 때
                 else if(whatwhat == 0) {
                     String[] splitText = res.split(",");
-                    for (int i = 0; i < splitText.length; i = i + 3) {
-                        String yesNo;
-                        if ("X".equals(splitText[i + 1]) && "X".equals(splitText[i + 2])) {
-                            yesNo = "미완료";
-                        } else {
-                            yesNo = "완료";
+                    if("ERROR".equals(splitText[0])) {
+                        Log.d(TAG,"Extract Sido ERROR");
+                    }
+                    else {
+                        for (int i = 0; i < splitText.length; i = i + 3) {
+                            String yesNo;
+                            if ("X".equals(splitText[i + 1]) && "X".equals(splitText[i + 2])) {
+                                yesNo = "미완료";
+                            } else {
+                                yesNo = "완료";
+                            }
+                            lAdapter.addItem(new listItem(splitText[i], yesNo));
                         }
-                        lAdapter.addItem(new listItem(splitText[i], yesNo));
                     }
                 }
                 //읍면동 검색 후
@@ -254,7 +259,7 @@ public class PicListActivity extends AppCompatActivity {
                 }
             }
             else {
-                StyleableToast.makeText(getApplicationContext(), "인터넷 상태를 확인해주세요.", Toast.LENGTH_LONG,R.style.mytoast);
+                StyleableToast.makeText(getApplicationContext(), "인터넷 상태를 확인해주세요.", Toast.LENGTH_LONG,R.style.mytoast).show();
             }
             gridView.setAdapter(lAdapter);
         }

@@ -1,40 +1,46 @@
-
+//페이지 접근 시 대상지 출력 함수 실행
 $(document).ready(function(){
   ajax_searchpicpic(sidoCode);
 })
+
+//대상지 벡터소스
 var onOffSource = new ol.source.Vector();
+//대상지 벡터
 var onOffVector = new ol.layer.Vector();
+//선택지번 벡터
 var clickVector = new ol.layer.Vector();
+
 var maxzoom = 19;
 if(mapType == "PHOTO") {
   maxzoom = 18;
 }
-else {
-  maxzoom = 19;
-}
+
+//지도 뷰 오브젝트 생성
 var view = new ol.View({
   center:ol.proj.transform([lng, lat], 'EPSG:4326', 'EPSG:3857'),
   maxZoom: maxzoom,
-  minZoom:12,
+  minZoom:10,
   zoom: 18
 });
 
+//마커 생성
 var markerImg = document.getElementById('popup');
 var marker = new ol.Overlay({
   position: ol.proj.transform([lng, lat], 'EPSG:4326', 'EPSG:3857'),
   element: markerImg
 });
 
-//지도 회전 제한
+//더블클릭 제한(지도회전 제한 제거)
 var rotateinteractions = ol.interaction.defaults({
   //altShiftDragRotate:false,
   //pinchRotate:false,
   doubleClickZoom:false
 });
 
+//맵 오브젝트 생성(spatial_map div에 적용)
 var map = new ol.Map({
   target: 'spatial_map',
-  layers: [JIBUN_Layer, RI_Layer, UMD_Layer, clickVector, JIBUN_Label, onOffVector],
+  layers: [JIBUN_Layer, RI_Layer, UMD_Layer, ROAD_Layer, clickVector, JIBUN_Label, onOffVector],
   view: view,
   overlays: [marker],
   renderer: 'canvas',
@@ -42,23 +48,31 @@ var map = new ol.Map({
   loadTilesWhileAnimating: true,
   loadTilesWhileInteracting: true,
 });
+
+//안드로이드 설정 적용
+//지적 출력 여부
 if(jjk == 'true') {
   JIBUN_Layer.setVisible(true);
 }
 else {
   JIBUN_Layer.setVisible(false);
 }
+//지번 출력 여부
 if(jbn == 'true') {
   JIBUN_Label.setVisible(true);
 }
 else {
   JIBUN_Label.setVisible(false);
 }
-//왼쪽클릭
+
+//왼쪽클릭(안드로이드에서 터치 시)
 map.on('singleclick', findClickMarger);
+
 //클릭 마커 주소 찾기
 function findClickMarger(e) {
   var loc = e.coordinate;
+
+  //클릭한 지점에서 가까운 대상지 찾기
   var feature = map.forEachFeatureAtPixel(e.pixel, function(feature) {return feature;});
   if(feature) {
     clickSource = onOffSource.getClosestFeatureToCoordinate(loc);
@@ -69,6 +83,7 @@ function findClickMarger(e) {
     var pnu = clickSource.getProperties().pnu;
     ajax_searchInfomation(pnu, sidoCode, loc, 'A', onOff);
   }
+  //없으면 클릭한 지적 표시
   else {
     ajax_clickPNU(loc);
   }
@@ -84,6 +99,8 @@ function changeMarker(pnu,cpnf, sdnf, drnf) {
 map.on('dblclick', createMarker);
 function createMarker(e) {
   var loc = e.coordinate;
+
+  //클릭한 지점에서 가까운 대상지 찾기
   var feature = map.forEachFeatureAtPixel(e.pixel, function(feature) {return feature;});
   if(feature) {
     //마커 제거
@@ -96,9 +113,9 @@ function createMarker(e) {
     var pnu = delSource.getProperties().pnu;
     ajax_updateOX("D",sidoCode,onOff,pnu,0,0);
   }
+  //없으면 마커 생성
   else {
     var onOff = ['X','X','X'];
-    //마커 생성
     ajax_findPNU(loc,sidoCode, 'W', onOff);
   }
 }

@@ -2,6 +2,9 @@
 <%@ include file ="mysql_conn.jsp" %>
 
 <%
+  /*
+   * 선택 대상지의 PNU, 지번 및 속성 데이터 select
+   */
   String s_pnu = request.getParameter("name");
   String s_sido = request.getParameter("SIDO");
   int i_find = 0;
@@ -17,7 +20,7 @@
                   rs.getString("JIGA")+"|"+rs.getString("AREA")+"|");
     }
   }catch(Exception e){
-    out.print(e);
+    out.print("ERROR");
   }finally{
     if(rs != null) rs.close();
     if(pstmt != null) pstmt.close();

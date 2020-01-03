@@ -2,6 +2,9 @@
 <%@ include file ="mysql_conn.jsp" %>
 
 <%
+  /*
+   * 대상지 촬영 여부 업데이트, 삽입, 제거
+   */
   String s_pnu    = request.getParameter("PNU");
   String s_capOnOff = request.getParameter("CAPONFF");
   String s_sndOnOff = request.getParameter("SNDONOFF");
@@ -11,6 +14,7 @@
   double d_coordx = Double.parseDouble(request.getParameter("X"));
   double d_coordy = Double.parseDouble(request.getParameter("Y"));
   try{
+    //촬영 여부 업데이트
     if("U".equals(s_uid)){
       String s_Query = "update real_investigate_"+s_sido+".tb_pictureyesno set PICTURE_OX = ? "+
                        ",SEND_OX = ? ,DRON_OX = ? where PNU = ? ";
@@ -22,6 +26,7 @@
       int result = pstmt.executeUpdate();
       out.print(result);
     }
+    //대상지 새로 추가
     else if("I".equals(s_uid)){
       String s_Query = "insert into real_investigate_"+s_sido+".tb_pictureyesno values(?,?,?,?,?,?)";
       pstmt = conn.prepareStatement(s_Query);
@@ -34,6 +39,7 @@
       int result = pstmt.executeUpdate();
       out.print(result);
     }
+    //대상지 제거
     else if("D".equals(s_uid)){
       String s_Query = "delete from real_investigate_"+s_sido+".tb_pictureyesno where PNU = ?";
       pstmt = conn.prepareStatement(s_Query);
@@ -42,7 +48,7 @@
       out.print(result);
     }
   }catch(Exception e){
-    out.print(e);
+    out.print("ERROR");
   }finally{
     if(pstmt != null) pstmt.close();
     if(conn != null) conn.close();
