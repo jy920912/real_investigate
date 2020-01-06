@@ -23,24 +23,4 @@
         <item name="0">NONFIX</item>
         <item name="1">FIX</item>
     </string-array>
-
-    <string-array name="sidocode_list">
-        <item>36110(세종특별자치시)</item>
-        <item>44131(천안시 동남구)</item>
-        <item>44133(천안시 서북구)</item>
-        <item>44150(공주시)</item>
-        <item>44180(보령시)</item>
-        <item>44200(아산시)</item>
-        <item>44210(서산시)</item>
-        <item>44230(논산시)</item>
-        <item>44250(계룡시)</item>
-        <item>44270(당진시)</item>
-        <item>44710(금산군)</item>
-        <item>44760(부여군)</item>
-        <item>44770(서천군)</item>
-        <item>44790(청양군)</item>
-        <item>44800(홍성군)</item>
-        <item>44810(예산군)</item>
-        <item>44825(태안군)</item>
-    </string-array>
 </resources>

@@ -93,6 +93,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import itk.jy.real_investigate.CameraActivity;
+import itk.jy.real_investigate.PictureGridActivity;
 import itk.jy.real_investigate.Preference.PreferenceManager;
 import itk.jy.real_investigate.R;
 
@@ -1032,10 +1033,14 @@ public class Camera2BasicFragment extends Fragment
             }
             //Info 버튼 선택 시
             case R.id.info: {
+                Intent intent = new Intent(getActivity().getApplication(), PictureGridActivity.class);
+                getActivity().startActivity(intent);
+                /*
                 Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setAction(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                getActivity().startActivity(Intent.createChooser(intent,"Get Album"));
+                getActivity().startActivity(intent);
+                */
                 break;
             }
             //근경 원경 변경 시

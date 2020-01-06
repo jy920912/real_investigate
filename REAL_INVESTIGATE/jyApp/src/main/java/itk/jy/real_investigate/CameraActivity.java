@@ -78,6 +78,7 @@ public class CameraActivity extends AppCompatActivity {
 
     public void setCapture_count() {
         ++capture_count;
+        addressIntent.putExtra("picCount", capture_count);
     }
 
     public int getCapture_count() {

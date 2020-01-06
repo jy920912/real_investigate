@@ -261,8 +261,19 @@ public class FragmentMap extends Fragment {
                     myFilenameFilter filt = new myFilenameFilter(addressText);
                     File fList[] = pictureStorage.listFiles(filt);
                     for(int i=0;i<fList.length;i++) {
+                        String screenShot = fList[i].getName();
+                        int pstion = screenShot.lastIndexOf("_");
+                        screenShot = screenShot.substring(pstion+1);
+                        pstion = screenShot.lastIndexOf(".");
+                        screenShot = screenShot.substring(0,pstion);
                         ListGetSet imageData = new ListGetSet(fList[i].getName(), fList[i].getPath(), -1);
-                        mArrayList.add(imageData);
+                        if("screenShot".equals(screenShot)){
+                            mArrayList.add(0,imageData);
+                        }
+                        else{
+                            mArrayList.add(imageData);
+                        }
+
                     }
                     mAdapter.notifyDataSetChanged();
                 }

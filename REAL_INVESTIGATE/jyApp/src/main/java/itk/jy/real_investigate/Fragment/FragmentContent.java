@@ -125,8 +125,10 @@ public class FragmentContent extends Fragment implements CustomAdapter.OnListIte
                         int listCount = mArrayList.size()-1;
                         //사진 번호 추출
                         String fName = mArrayList.get(listCount).getFileName();
-                        fName = fName.substring(fName.length()-5);
-                        fName = fName.substring(0, 1);
+                        int position = fName.lastIndexOf(".");
+                        fName = fName.substring(0,position);
+                        position = fName.lastIndexOf("_");
+                        fName = fName.substring(position+1);
                         try {
                             picCount = Integer.parseInt(fName);
                         }catch (Exception e) {

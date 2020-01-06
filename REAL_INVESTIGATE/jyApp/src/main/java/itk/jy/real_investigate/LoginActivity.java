@@ -73,13 +73,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         //시도코드 콤보박스
         sidoSpinner = findViewById(R.id.sidocode);
-        /*ArrayAdapter sidoAdapter = ArrayAdapter.createFromResource(this, R.array.sidocode_list,
-                android.R.layout.simple_spinner_dropdown_item);
-        sidoSpinner.setAdapter(sidoAdapter);
-
-        //저번에 선택했던 시군 position 불러오기
-        int selSido = PreferenceManager.getInt(getApplicationContext(),"sidoNum");
-        if(selSido != -1) sidoSpinner.setSelection(selSido);*/
 
         URLConnector task = new URLConnector();
         task.execute("", "");

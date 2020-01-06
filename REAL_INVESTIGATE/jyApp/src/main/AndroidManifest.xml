@@ -49,6 +49,8 @@
 
         <activity android:name=".PicListActivity"/>
 
+        <activity android:name=".PictureGridActivity"/>
+
         <activity android:name=".MoreContentActivity"/>
 
         <activity android:name=".ImageViewerActivity"/>

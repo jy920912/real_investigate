@@ -1,6 +1,23 @@
 //GIS서버 wms 주소
 var wmsServer = 'http://115.95.67.133:5088/geoserver/SPATIAL_'+sidoCode+'/wms';
 
+//선택 지번
+var SELECT_JIBUN_Source = new ol.source.TileWMS({
+  url:wmsServer,
+  params: {VERSION: '1.3.0',LAYERS: 'SPATIAL_'+sidoCode+':'+sidoCode+'_JIBUN_SELECT'},
+  serverType: 'geoserver',
+  crossOrigin: 'anonymous'
+});
+var SELECT_JIBUN_Layer = new ol.layer.Tile({
+  source : SELECT_JIBUN_Source,
+  minResolution: 0,
+  maxResolution: 4,
+  layerName : 'SPATIAL_'+sidoCode+':'+sidoCode+'_JIBUN_SELECT',
+  layerCategory : 'WMS',
+  type : 'WMS',
+  visible : false,
+});
+
 //지번 레이어
 var JIBUN_Source = new ol.source.TileWMS({
   url:wmsServer,

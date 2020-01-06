@@ -30,47 +30,18 @@ function ajax_clickPNU(loc) {
       if(features.length) {
         var feature = features[0];
         wmsPnu = feature.get('PNU');
+
+        // selectedSpatial
+        var filterParams = {'CQL_FILTER': null};             // apply CQL_FILTER
+        filterParams['CQL_FILTER'] = "PNU="+wmsPnu;
+	      SELECT_JIBUN_Source.updateParams(filterParams);
+        SELECT_JIBUN_Layer.setVisible(true);
+      } else {
+        SELECT_JIBUN_Layer.setVisible(false);
       }
-
-      //wfs방식으로
-      var url = 'http://115.95.67.133:5088/geoserver/SPATIAL_'+sidoCode+'/wfs?'+
-                'service=wfs&version=1.1.0&request=GetFeature&typename=SPATIAL_'+sidoCode+':'+sidoCode+'_JIBUN&'+
-                'outputFormat=application/json&srsname=EPSG:3857&CQL_Filter=PNU IN('+wmsPnu+')';
-      $.ajax({
-        url:url,
-        dataType:'json',
-        error: function(xhr, status, err) {
-          return false;
-        },
-        success: function(data, status, xhr) {
-          var vectorSource;
-          var dif = new ol.format.GeoJSON(),
-          features = dif.readFeatures(data);
-          if(features.length) {
-            var feature = features[0];
-
-            //선택 지번 백터 설정
-            vectorSource = new ol.source.Vector({
-              format:new ol.format.GeoJSON(),
-              url:url,
-              strategy:ol.loadingstrategy.bbox
-            });
-            clickVector.setStyle(new ol.style.Style({
-              stroke: new ol.style.Stroke({
-                color: '#6fa8dc',
-                width:3
-              }),
-              fill: new ol.style.Fill({
-                color: 'rgba(255,255,255,0.4)'
-              })
-            }));
-            clickVector.setSource(vectorSource);
-          }
-          else {
-            clickVector.setSource();
-          }
-        }
-      })
+    },
+    error: function(xhr, status, err) {
+      SELECT_JIBUN_Layer.setVisible(false);
     }
   });
 }
@@ -159,7 +130,7 @@ function ajax_createMarker(name, sido, loc, onOff) {
   ajax_updateOX('I',sido,onOff,name,newloc[0],newloc[1])
 }
 
-//대상지 불러오기
+//대상지 전체 불러오기
 function ajax_searchpicpic(sido){
   $.ajax({
     type : "POST",

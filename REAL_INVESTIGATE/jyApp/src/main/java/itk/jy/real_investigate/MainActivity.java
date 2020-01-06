@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton picListButton;
     public SlidingUpPanelLayout mLayout;
 
-    GPS gps_Ckeck;
+    GPS gps_Check;
     Location location;
     public boolean tackerOnOff = false;
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         mProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
 
         //gps 준비
-        gps_Ckeck  = new GPS(MainActivity.this);
+        gps_Check  = new GPS(MainActivity.this);
 
 
         //slide 화면에 컨텐츠 정보 출력 위한 content fragment 출력
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
     //좌표 가져오기
     public Location func_init_location() {
-        location = gps_Ckeck.getLocation();
+        location = gps_Check.getLocation();
         return location;
     }
 
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         if(downApp) return;
         //인터넷 미연결 시 종료박스 출력
         if(InternetManager.getConnectivityStatus(getApplicationContext()) == 3) {
-            gps_Ckeck.stopUsingGPS();
+            gps_Check.stopUsingGPS();
             // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
             AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
             alBuilder.setMessage("인터넷이 연결되지 않았습니다. 인터넷을 연결하십시오.");
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 //스크린샷 파일 생성
-                String STORE_DIRECTORY = sidoCode+FILENAME+"_screenShot.png";
+                String STORE_DIRECTORY = sidoCode+FILENAME+"_0_screenShot.png";
                 storeDirectory = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DCIM), STORE_DIRECTORY);
                 // display metrics
                 DisplayMetrics metrics = getResources().getDisplayMetrics();

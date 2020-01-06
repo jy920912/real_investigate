@@ -20,6 +20,7 @@ dependencies {
   implementation 'androidx.legacy:legacy-support-v4:1.0.0'
   implementation 'androidx.preference:preference:1.1.0'
   implementation 'androidx.appcompat:appcompat:1.1.0'
+  implementation 'com.github.bumptech.glide:glide:3.7.0'
   implementation project(':library')
   implementation 'com.muddzdev:styleabletoast:2.2.3'
   implementation files('libs\\commons-net-3.6-sources.jar')

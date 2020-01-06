@@ -7,8 +7,6 @@ $(document).ready(function(){
 var onOffSource = new ol.source.Vector();
 //대상지 벡터
 var onOffVector = new ol.layer.Vector();
-//선택지번 벡터
-var clickVector = new ol.layer.Vector();
 
 var maxzoom = 19;
 if(mapType == "PHOTO") {
@@ -40,7 +38,7 @@ var rotateinteractions = ol.interaction.defaults({
 //맵 오브젝트 생성(spatial_map div에 적용)
 var map = new ol.Map({
   target: 'spatial_map',
-  layers: [JIBUN_Layer, RI_Layer, UMD_Layer, ROAD_Layer, clickVector, JIBUN_Label, onOffVector],
+  layers: [JIBUN_Layer, RI_Layer, UMD_Layer, ROAD_Layer, SELECT_JIBUN_Layer, JIBUN_Label, onOffVector],
   view: view,
   overlays: [marker],
   renderer: 'canvas',
@@ -64,14 +62,12 @@ if(jbn == 'true') {
 else {
   JIBUN_Label.setVisible(false);
 }
-
 //왼쪽클릭(안드로이드에서 터치 시)
 map.on('singleclick', findClickMarger);
 
 //클릭 마커 주소 찾기
 function findClickMarger(e) {
   var loc = e.coordinate;
-
   //클릭한 지점에서 가까운 대상지 찾기
   var feature = map.forEachFeatureAtPixel(e.pixel, function(feature) {return feature;});
   if(feature) {

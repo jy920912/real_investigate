@@ -226,7 +226,7 @@ public class PicListActivity extends AppCompatActivity {
                     ArrayList arrList = new ArrayList<>();
                     String[] splitText = res.split(",");
                     //읍면동 스피너에 입력
-                    for(int i=2;i<splitText.length-2;i= i+2) {
+                    for(int i=2;i<splitText.length;i= i+2) {
                         String spinnerString = splitText[i]+"("+splitText[i+1]+")";
                         arrList.add(spinnerString);
                     }
